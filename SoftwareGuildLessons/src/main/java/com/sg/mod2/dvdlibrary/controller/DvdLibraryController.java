@@ -43,6 +43,8 @@ public class DvdLibraryController {
                 if(command == REMOVE || command == EDIT || command == GET || command == LIST){
                     if(dao.listDvds().isEmpty()){
                         view.displayEmptyLibrary();
+                        // this was the bug, wasnt setting command to UNKNOWN
+                        dupeCommand = UNKNOWN;
                         continue;
                     }
                 }
