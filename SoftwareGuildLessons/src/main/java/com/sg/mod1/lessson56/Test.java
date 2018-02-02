@@ -5,17 +5,33 @@
  */
 package com.sg.mod1.lessson56;
 
+import java.util.Scanner;
+
 /**
  *
  * @author Ben Norman
  */
 public class Test {
-   private static void doStuff(){
-        // does stuff
-    }
     public static void main(String[] args) {
-        Integer.parseInt("100");
-        Test.doStuff();
-        
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        System.out.println("Days till friday = " + DaysOfWeek.getDaysTillFriday(input));
+    }
+}
+
+enum DaysOfWeek {
+    MONDAY(4), TUESDAY(3), WEDNESDAY(2), THURSDAY(1), FRIDAY(0), SATURDAY(6), SUNDAY(5);
+    int daysTillFriday;
+
+    DaysOfWeek(int daysTillFriday) {
+        this.daysTillFriday = daysTillFriday;
+    }
+
+    static int getDaysTillFriday(String input) {
+        try {
+            return DaysOfWeek.valueOf(input.toUpperCase()).daysTillFriday;
+        } catch (IllegalArgumentException e) {
+            return Integer.MAX_VALUE;
+        }
     }
 }

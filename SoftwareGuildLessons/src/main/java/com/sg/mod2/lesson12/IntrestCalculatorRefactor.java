@@ -29,6 +29,8 @@ class IntrestCalculator{
     static void start(){
         System.out.println("WELCOME TO THE INTREST CALCULATOR");
         getInput();
+        System.out.println("YOUR RESULT IS....");
+        System.out.println(calculate());
     }
 
     static void getInput() {
@@ -48,5 +50,15 @@ class IntrestCalculator{
             // todo error handling msg
             yearsToCompound = Integer.parseInt(scanner.nextLine());
         }
+    }
+    
+    static String calculate(){
+        BigDecimal result = new BigDecimal("10");
+        for(int i = 0; i < yearsToCompound; i++){
+            for(int j = 0; j < 4; i++){
+                // todo stuff
+            }
+        }
+        return result.toPlainString();
     }
 }
