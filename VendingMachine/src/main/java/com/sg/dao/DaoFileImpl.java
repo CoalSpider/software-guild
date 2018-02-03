@@ -70,8 +70,9 @@ public class DaoFileImpl implements Dao {
             // create in default directory
             try {
                 file.createNewFile();
+                createDefaultItemSet();
             } catch (IOException io) {
-                throw new PersistanceException("Cant find items");
+                throw new PersistanceException("Cant find machine");
             }
         }
         
@@ -88,15 +89,34 @@ public class DaoFileImpl implements Dao {
                 VendableItem item = new VendableItem(name, price, quantity);
                 
                 inventory.put(name, item);
-                
             }
-            
+        
         } catch (IOException io) {
             // should never happen
             throw new PersistanceException("Cant find items");
         } catch (NumberFormatException nfe) {
-            throw new NumberFormatException("Error getting item");
+            throw new PersistanceException("Error getting item");
         }
+        
+        if(getAllItems().isEmpty()){
+            createDefaultItemSet();
+        }
+    }
+    
+    private void createDefaultItemSet() throws PersistanceException{
+        VendableItem snickers = new VendableItem("Snickers",new BigDecimal("1.25"),10);
+        VendableItem MtnDew = new VendableItem("Mtn Dew",new BigDecimal("1.75"),3);
+        VendableItem cookie = new VendableItem("Snickers",new BigDecimal("0.25"),10);
+        VendableItem MnMs = new VendableItem("MnMs",new BigDecimal("1.00"),1);
+        VendableItem doritoes = new VendableItem("Bag of Doritos",new BigDecimal("0.75"),25);
+        VendableItem solidGoldWatch = new VendableItem("Solid Gold Watch",new BigDecimal("2000.00"),0);
+        inventory.put(snickers.getName(), snickers);
+        inventory.put(MtnDew.getName(), MtnDew);
+        inventory.put(cookie.getName(), cookie);
+        inventory.put(MnMs.getName(), MnMs);
+        inventory.put(doritoes.getName(), doritoes);
+        inventory.put(solidGoldWatch.getName(), solidGoldWatch);
+        writeFile();
     }
     
     @Override
