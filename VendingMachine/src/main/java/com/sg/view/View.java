@@ -52,7 +52,7 @@ public class View {
     }
 
     private void printItem(VendableItem item) {
-        io.print(item.getName() + " --- " + item.getPrice() + " --- ");
+        io.print(item.getName() + " --- $" + item.getPrice() + " --- ");
         if (item.getCount() <= 0) {
             io.println("Out Of Stock");
         } else {
