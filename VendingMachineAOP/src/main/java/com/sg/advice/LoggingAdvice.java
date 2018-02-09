@@ -19,16 +19,8 @@ import org.aspectj.lang.JoinPoint;
 public class LoggingAdvice {
 
     private static final String FILE_NAME = "errorLog.txt";
-
-    public void createNoItemInventoryExceptionEntry(JoinPoint joinPoint) {
-        writeErrorEntry(joinPoint,"NoItemInventoryException");
-    }
-
-    public void createInsufficentFundsExceptionEntry(JoinPoint joinPoint) {
-        writeErrorEntry(joinPoint,"InsufficentFundsException");
-    }
     
-    public void writeErrorEntry(JoinPoint joinPoint, String error){
+    public void createErrorEntry(JoinPoint joinPoint, Throwable error){
         Object[] args = joinPoint.getArgs();
         String auditEntry = "";
         for (Object currentArg : args) {
@@ -38,7 +30,7 @@ public class LoggingAdvice {
                 auditEntry += ((VendableItem) currentArg).getName();
             }
         }
-        auditEntry += " : "+error;
+        auditEntry += " : "+error.getClass().getName();
         writeEntry(auditEntry);
     }
 

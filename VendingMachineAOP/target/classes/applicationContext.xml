@@ -37,13 +37,15 @@
     <aop:config>
         <aop:aspect ref="logging">
             <aop:after-throwing
-                method="createNoItemInventoryExceptionEntry"
+                method="createErrorEntry"
                 pointcut="execution(* com.sg.service.ServiceFileImpl.getItem(..))"
+                throwing="error"
             />
          
             <aop:after-throwing
-                method="createInsufficentFundsExceptionEntry"
+                method="createErrorEntry"
                 pointcut="execution(* com.sg.service.ServiceFileImpl.vendItem(..))"
+                throwing="error"
             />
            
         </aop:aspect>
