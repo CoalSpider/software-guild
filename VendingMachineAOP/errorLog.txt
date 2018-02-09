@@ -1,0 +1,3 @@
+2018-02-09T14:08:32.629 : Bag of Doritos : InsufficentFundsException
+2018-02-09T14:08:49.554 : Mtn Dew : InsufficentFundsException
+2018-02-09T14:08:57.959 : Snickers : InsufficentFundsException
