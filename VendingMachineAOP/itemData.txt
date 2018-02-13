@@ -1,4 +1,4 @@
-Bag of Doritos::0.75::25
+Bag of Doritos::0.75::24
 MnMs::1.00::0
 Mtn Dew::1.75::3
 Snickers::0.25::9
