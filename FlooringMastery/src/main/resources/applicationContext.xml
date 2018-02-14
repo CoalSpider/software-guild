@@ -18,4 +18,9 @@
         <constructor-arg ref="productDao"/>
         <constructor-arg ref="stateDao"/>
     </bean>
+    <bean id="view" class="com.sg.view.View"/>
+    <bean id="controller" class="com.sg.controller.Controller">
+        <constructor-arg ref="view"/>
+        <constructor-arg ref="service"/>
+    </bean>
 </beans>

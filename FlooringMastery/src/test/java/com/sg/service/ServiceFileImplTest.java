@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -32,29 +34,29 @@ import static org.junit.Assert.*;
  * @author Ben Norman
  */
 public class ServiceFileImplTest {
-    
+
     private ServiceFileImpl service;
     private final StateDaoFileImpl states = new StateDaoFileImpl();
     private final ProductDaoFileImpl products = new ProductDaoFileImpl();
     private final Order expected = new Order();
     private final LocalDate testDate = LocalDate.of(9999, 01, 01);
-    
+
     public ServiceFileImplTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
         // reset OrderDaoFileImpl between tests
         service = new ServiceFileImpl(new OrderDaoFileImpl(), products, states);
-        
+
         expected.setOrderNumber(1);
         expected.setCustomerName("TestManA");
         expected.setAreaInSquareFeet(new BigDecimal("100.00"));
@@ -63,7 +65,7 @@ public class ServiceFileImplTest {
         // force calculations by calling getTotal()
         expected.getTotal();
     }
-    
+
     @After
     public void tearDown() {
         File f = new File("orders", "Order_01019999.txt");
@@ -73,7 +75,7 @@ public class ServiceFileImplTest {
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
-        
+
         try {
             PrintWriter writer = new PrintWriter(f);
             // put the header back
@@ -84,37 +86,6 @@ public class ServiceFileImplTest {
         }
     }
 
-    // a silly test but it should pass
-    @Test
-    public void testUpdateOrder() {
-        Order newData = null;
-        try {
-            newData = new Order();
-            
-            newData.setAreaInSquareFeet(new BigDecimal("200.00"));
-            newData.setProduct(products.getProducts().get(2));
-            
-            service.updateOrder(expected, newData);
-
-            // confirm we changed what we think we changed
-            assertEquals(expected.getAreaInSquareFeet(), newData.getAreaInSquareFeet());
-            assertEquals(expected.getProduct(), newData.getProduct());
-        } catch (PersistenceException | DeletedOrderException ex) {
-            fail(ex.getMessage());
-        }
-        
-        try {
-            service.createOrder(expected, testDate);
-            service.deleteOrder(expected, testDate);
-            service.updateOrder(expected, newData);
-            fail("did not catch deleted order exception");
-        } catch (PersistenceException | DuplicateOrderException ex) {
-            fail(ex.getMessage());
-        } catch (DeletedOrderException ex) {
-            // pass
-        }
-    }
-    
     @Test
     public void testCreateOrder_Order_LocalDate() {
         try {
@@ -126,7 +97,7 @@ public class ServiceFileImplTest {
         } catch (PersistenceException | DuplicateOrderException ex) {
             fail(ex.getMessage());
         }
-        
+
         try {
             // confrim duplicate order exception thrown
             service.createOrder(expected, testDate);
@@ -137,13 +108,13 @@ public class ServiceFileImplTest {
             // pass
         }
     }
-    
+
     @Test
     public void testCreateOrder_Order() {
         // DO NOT TEST will mangle todays data becasue we have no separation between test and production data
         // This method calls the version with the localDate anyways so as long as that works were fine
     }
-    
+
     @Test
     public void testDeleteOrder() {
         try {
@@ -156,7 +127,7 @@ public class ServiceFileImplTest {
         } catch (PersistenceException | DuplicateOrderException ex) {
             fail(ex.getMessage());
         }
-        
+
         try {
             // confirm deleting order that doesnt exist for given date throws
             service.deleteOrder(expected, LocalDate.of(9998, 01, 01));
@@ -165,7 +136,7 @@ public class ServiceFileImplTest {
             // pass
         }
     }
-    
+
     @Test
     public void testGetOrder() {
         // first order of file Order_01019990.txt == expected
@@ -194,7 +165,7 @@ public class ServiceFileImplTest {
             // pass
         }
     }
-    
+
     @Test
     public void testGetOrders() {
         try {
@@ -208,7 +179,7 @@ public class ServiceFileImplTest {
             fail(ex.getMessage());
         }
     }
-    
+
     @Test
     public void testSave() {
         Order order2 = new Order();
@@ -217,14 +188,14 @@ public class ServiceFileImplTest {
         // service layer will prevent invalid product types and invalid states
         order2.setProduct(new Product("candy", new BigDecimal("0.01"), new BigDecimal("9")));
         order2.setState(new State("MN", new BigDecimal("1.2")));
-        
+
         Order order3 = new Order();
         order3.setCustomerName("TestManB");
         order3.setAreaInSquareFeet(new BigDecimal(4 * 3));
         // service layer will prevent invalid product types and invalid states
         order3.setProduct(new Product("solid gold", new BigDecimal("1231"), new BigDecimal("500")));
         order3.setState(new State("BD", new BigDecimal("15")));
-        
+
         try {
             // create order 1
             service.createOrder(expected, testDate);
@@ -247,10 +218,10 @@ public class ServiceFileImplTest {
         try {
             Order a = service.getOrder(1, testDate);
             assert (expected.equals(a));
-            
+
             Order b = service.getOrder(2, testDate);
             assert (order2.equals(b));
-            
+
             Order c = service.getOrder(3, testDate);
             assert (order3.equals(c));
         } catch (PersistenceException ex) {
@@ -268,7 +239,7 @@ public class ServiceFileImplTest {
             assertTrue(service.isValidProduct("Laminate"));
             assertTrue(service.isValidProduct("Tile"));
             assertTrue(service.isValidProduct("Wood"));
-            
+
             assertFalse(service.isValidProduct("Candy")); // doesnt exist
             assertFalse(service.isValidProduct("Woood")); // extra char in valid name
             assertFalse(service.isValidProduct("")); // empty
@@ -287,7 +258,7 @@ public class ServiceFileImplTest {
             assertTrue(service.isValidState("PA"));
             assertTrue(service.isValidState("MI"));
             assertTrue(service.isValidState("IN"));
-            
+
             assertFalse(service.isValidState("MN")); // no sold here 
             assertFalse(service.isValidState("Ohio")); // full name invalid 
             assertFalse(service.isValidState("")); // empty 
@@ -307,5 +278,70 @@ public class ServiceFileImplTest {
         assertTrue(service.isValidDate(LocalDate.now().minusDays(1)));
         // test after today is invalid
         assertFalse(service.isValidDate(LocalDate.now().plusDays(1)));
+    }
+
+    @Test
+    public void testGetState() {
+        try {
+            // should all find the state fails if the product was not found
+            service.getState("OH");
+            service.getState("PA");
+            service.getState("MI");
+            service.getState("IN");
+        } catch (PersistenceException ex) {
+            fail(ex.getMessage());
+        }
+
+        try {
+            service.getState("MN"); // no sold here 
+            fail("did not catch error");
+        } catch (PersistenceException ex) {
+            // pass
+        }
+
+        try {
+            service.getState("Ohio"); // full name invalid 
+            fail("did not catch error");
+        } catch (PersistenceException ex) {
+            //pass
+        }
+        try {
+            service.getState(""); // empty 
+            fail("did not catch error");
+        } catch (PersistenceException ex) {
+            // pass
+        }
+    }
+
+    @Test
+    public void testGetProduct() {
+        try {
+            // should find all products fails if it cant
+            service.getProduct("Carpet");
+            service.getProduct("Laminate");
+            service.getProduct("Tile");
+            service.getProduct("Wood");
+        } catch (PersistenceException ex) {
+            fail(ex.getMessage());
+        }
+
+        try {
+            service.getProduct("Candy"); // doesnt exist
+            fail("did not catch error");
+        } catch (PersistenceException ex) {
+            // pass
+        }
+        try {
+            service.getProduct("Woood"); // extra char in valid name
+            fail("did not catch error");
+        } catch (PersistenceException ex) {
+            // pass
+        }
+        try {
+            service.getProduct(""); // empty
+            fail("did not catch error");
+        } catch (PersistenceException ex) {
+            // pass
+        }
     }
 }

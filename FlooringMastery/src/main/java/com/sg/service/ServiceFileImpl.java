@@ -33,18 +33,6 @@ public class ServiceFileImpl implements Service {
         this.stateDao = stateDao;
     }
 
-    // TODO: make sure user entered data always has 2 decimal places
-    @Override
-    public void updateOrder(Order order, Order newData) throws PersistenceException, DeletedOrderException {
-        if(order.isDeleted()){
-            throw new DeletedOrderException("cannt update a deleted order");
-        }
-        order.setCustomerName(newData.getCustomerName());
-        order.setProduct(newData.getProduct());
-        order.setState(newData.getState());
-        order.setAreaInSquareFeet(newData.getAreaInSquareFeet());
-    }
-
     @Override
     public void createOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException {
         orderDao.createOrder(order, date);
@@ -101,5 +89,31 @@ public class ServiceFileImpl implements Service {
     @Override
     public boolean isValidDate(LocalDate date) {
         return date.isAfter(LocalDate.now()) == false;
+    }
+
+    // TODO: move to stateDao.getState() method
+    @Override
+    public State getState(String stateName) throws PersistenceException {
+        if(isValidState(stateName)){
+            for(State s : stateDao.getStates()){
+                if(s.getName().equals(stateName)){
+                    return s;
+                }
+            }
+        }
+        throw new PersistenceException("unknown state");
+    }
+
+    // TODO: move to productDao.getProduct() method
+    @Override
+    public Product getProduct(String productType) throws PersistenceException {
+        if(isValidProduct(productType)){
+            for(Product p : productDao.getProducts()){
+                if(p.getType().equals(productType)){
+                    return p;
+                }
+            }
+        }
+        throw new PersistenceException("unknown product");
     }
 }

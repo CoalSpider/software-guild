@@ -7,6 +7,8 @@ package com.sg.service;
 
 import com.sg.exceptions.PersistenceException;
 import com.sg.dto.Order;
+import com.sg.dto.Product;
+import com.sg.dto.State;
 import com.sg.exceptions.DeletedOrderException;
 import com.sg.exceptions.DuplicateOrderException;
 import java.time.LocalDate;
@@ -17,15 +19,6 @@ import java.util.List;
  * @author Ben Norman
  */
 public interface Service {
-
-    /**
-     * Updates the given order with the new data
-     *
-     * @param order the order to update
-     * @param newData the new order data
-     * @throws PersistenceException if there was a error talking to the database
-     */
-    void updateOrder(Order order, Order newData) throws PersistenceException, DeletedOrderException;
 
     /**
      * Creates a order for the given date
@@ -103,4 +96,22 @@ public interface Service {
      * @return true if the date is valid.
      */
     boolean isValidDate(LocalDate date);
+
+    /**
+     *
+     * @param stateName the name of the state
+     * @return the state with the given name
+     * @throws PersistenceException if there was a error talking to the database
+     * or the state name doesnt exist
+     */
+    State getState(String stateName) throws PersistenceException;
+    
+    /**
+     *
+     * @param productType the name of the product ie wood, carpet, vinyl, etc...
+     * @return the product with the given type
+     * @throws PersistenceException if there was a error talking to the database
+     * or the product type doesnt exist
+     */
+    Product getProduct(String productType) throws PersistenceException;
 }
