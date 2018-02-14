@@ -5,10 +5,9 @@
  */
 package com.sg.dto;
 
-import com.sg.common.FlooringUtil;
+import static com.sg.common.MoneyUtil.MONEY_ROUND;
+import static com.sg.common.MoneyUtil.SCALE;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.Objects;
 
 /**
@@ -71,25 +70,29 @@ public class Order {
     }
 
     public void setAreaInSquareFeet(BigDecimal areaInSquareFeet) {
-        this.areaInSquareFeet = areaInSquareFeet;
+        this.areaInSquareFeet = areaInSquareFeet.setScale(SCALE,MONEY_ROUND);;
         nullCalculated();
     }
 
     public void setMaterialCost(BigDecimal materialCost) {
-        this.materialCost = materialCost;
+        this.materialCost = materialCost.setScale(SCALE,MONEY_ROUND);;
     }
 
     public void setLaborCost(BigDecimal laborCost) {
-        this.laborCost = laborCost;
+        this.laborCost = laborCost.setScale(SCALE,MONEY_ROUND);;
     }
 
     public void setTax(BigDecimal tax) {
-        this.tax = tax;
+        this.tax = tax.setScale(SCALE,MONEY_ROUND);;
     }
 
     public void setTotal(BigDecimal total) {
-        if (DELETED_ORDER_TOTAL.equals(this.total)) {
+        if(DELETED_ORDER_TOTAL.equals(this.total)){
             // do nothing
+            return;
+        }
+        if (DELETED_ORDER_TOTAL.equals(total)) {
+            this.total = DELETED_ORDER_TOTAL;
         } else {
             this.total = total;
         }
@@ -98,7 +101,8 @@ public class Order {
     public BigDecimal getMaterialCost() {
         if (materialCost == null) {
             // make sure scale is 2
-            setMaterialCost(product.getCostPerSquareFoot().multiply(areaInSquareFeet,FlooringUtil.MONEY_CONTEXT));
+            setMaterialCost(product.getCostPerSquareFoot()
+                    .multiply(areaInSquareFeet));
         }
         return materialCost;
     }
@@ -106,7 +110,8 @@ public class Order {
     public BigDecimal getLaborCost() {
         if (laborCost == null) {
             // make sure scale is 2
-            setLaborCost(product.getLaborCostPerSquareFoot().multiply(areaInSquareFeet,FlooringUtil.MONEY_CONTEXT));
+            setLaborCost(product.getLaborCostPerSquareFoot()
+                    .multiply(areaInSquareFeet));
         }
         return laborCost;
     }
@@ -114,9 +119,11 @@ public class Order {
     public BigDecimal getTax() {
         if (tax == null) {
             // tax rates are stored as a percent we need to convert them
-            BigDecimal taxRate = FlooringUtil.percentToDecimal(state.getTaxRate());
+            BigDecimal taxRate = state.getTaxRate().movePointLeft(2);
             // make sure scale is 2
-            setTax(getMaterialCost().add(getLaborCost()).multiply(taxRate, FlooringUtil.MONEY_CONTEXT));
+            setTax(getMaterialCost()
+                    .add(getLaborCost())
+                    .multiply(taxRate));
         }
         return tax;
     }
@@ -124,9 +131,15 @@ public class Order {
     public BigDecimal getTotal() {
         if (total == null) {
             // make sure scale is 2
-            setTotal(getMaterialCost().add(getLaborCost()).add(getTax(),FlooringUtil.MONEY_CONTEXT));
+            setTotal(getMaterialCost()
+                    .add(getLaborCost())
+                    .add(getTax()));
         }
         return total;
+    }
+
+    public boolean isDeleted() {
+        return getTotal().equals(DELETED_ORDER_TOTAL);
     }
 
     // when the user edits data we want to null out calculated fields so they are recalculated next time we call the Fgetters
@@ -136,7 +149,7 @@ public class Order {
         tax = null;
         total = null;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -201,7 +214,26 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" + "orderNumber=" + orderNumber + ", customerName=" + customerName + ", areaInSquareFeet=" + areaInSquareFeet + ", materialCost=" + materialCost + ", laborCost=" + laborCost + ", tax=" + tax + ", total=" + total + ", state=" + state + ", product=" + product + '}';
+        return "Order{" 
+                + "orderNumber=" 
+                + orderNumber 
+                + ", customerName=" 
+                + customerName 
+                + ", areaInSquareFeet=" 
+                + areaInSquareFeet.toPlainString() 
+                + ", materialCost=" 
+                + materialCost.toPlainString()
+                + ", laborCost=" 
+                + laborCost.toPlainString()
+                + ", tax=" 
+                + tax.toPlainString()
+                + ", total=" 
+                + total.toPlainString()
+                + ", state=" 
+                + state
+                + ", product=" 
+                + product 
+                + '}';
     }
-    
+
 }

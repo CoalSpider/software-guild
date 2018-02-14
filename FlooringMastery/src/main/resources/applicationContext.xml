@@ -10,4 +10,12 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
     <!-- Bean definitions go here -->
+    <bean id="orderDao" class="com.sg.dao.OrderDaofileImpl"/>
+    <bean id="productDao" class="com.sg.dao.ProductDaoFileImpl"/>
+    <bean id="stateDao" class="com.sg.dao.StateDaoFileImpl"/>
+    <bean id="service" class="com.sg.service.ServiceFileImpl">
+        <constructor-arg ref="orderDao"/>
+        <constructor-arg ref="productDao"/>
+        <constructor-arg ref="stateDao"/>
+    </bean>
 </beans>

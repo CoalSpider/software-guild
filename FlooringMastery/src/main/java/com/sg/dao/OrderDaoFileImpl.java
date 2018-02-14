@@ -5,6 +5,8 @@
  */
 package com.sg.dao;
 
+import com.sg.exceptions.DuplicateOrderException;
+import com.sg.exceptions.PersistenceException;
 import com.sg.dto.Order;
 import com.sg.dto.Product;
 import com.sg.dto.State;
@@ -20,10 +22,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -36,6 +36,7 @@ import java.util.stream.Stream;
 public class OrderDaoFileImpl implements OrderDao {
 
     private static final String FOLDER_NAME = "orders";
+    private static final String FILE_EXTENSION = ".txt";
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MMddyyyy");
     private static final String DELIMITER = ",";
     private static final String ORDER_FILE_HEADER = "OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total";
@@ -46,8 +47,12 @@ public class OrderDaoFileImpl implements OrderDao {
     private void writeData() throws PersistenceException {
         StringBuilder fileNameBuilder = new StringBuilder();
         for (LocalDate date : allOrders.keySet()) {
+            // clear file builder
+            fileNameBuilder.delete(0, fileNameBuilder.length());
+            // now build the file name
             fileNameBuilder.append("Order_");
             fileNameBuilder.append(date.format(DATE_FORMAT));
+            fileNameBuilder.append(FILE_EXTENSION); // extension
             File file = new File(FOLDER_NAME, fileNameBuilder.toString());
             // if the file doesnt exist
             if (file.exists() == false) {
@@ -72,7 +77,7 @@ public class OrderDaoFileImpl implements OrderDao {
                 // clear order builder
                 orderBuilder.delete(0, orderBuilder.length());
                 // builder new order
-                String orderString = orderToFileString(order,orderBuilder);
+                String orderString = orderToFileString(order, orderBuilder);
                 // write to file
                 writer.println(orderString);
                 // force immediate write
@@ -107,11 +112,13 @@ public class OrderDaoFileImpl implements OrderDao {
         orderBuilder.append(DELIMITER);
         orderBuilder.append(order.getTax().toPlainString());
         orderBuilder.append(DELIMITER);
-        orderBuilder.append(order.getTotal().toPlainString());
+        orderBuilder.append(order.isDeleted() ? "0" : order.getTotal().toPlainString());
         return orderBuilder.toString();
     }
 
     /**
+     * This method will load ALL order names into memory
+     *
      * @return null if the order file was not found with the given date
      * @throws PersistenceException if there was a error finding the order or if
      * more than one file found matching the date
@@ -147,7 +154,8 @@ public class OrderDaoFileImpl implements OrderDao {
     private void readOrderFile(File f) throws PersistenceException {
         LocalDate date;
         try {
-            date = LocalDate.parse(f.getName().split("_")[1], DATE_FORMAT);
+            // strip file extension and extract the date out of the filename
+            date = LocalDate.parse(f.getName().replace(FILE_EXTENSION, "").split("_")[1], DATE_FORMAT);
         } catch (DateTimeParseException e) {
             throw new PersistenceException("could not read file");
         }
@@ -158,7 +166,7 @@ public class OrderDaoFileImpl implements OrderDao {
             if (sc.hasNext() == false) {
                 throw new PersistenceException("error reading order file " + f.getName());
             }
-            // scip
+            // skip the header line
             sc.nextLine();
             while (sc.hasNext()) {
                 String line = sc.nextLine();
@@ -187,7 +195,7 @@ public class OrderDaoFileImpl implements OrderDao {
         BigDecimal materialCost = new BigDecimal(tokens[8]);
         BigDecimal laborCost = new BigDecimal(tokens[9]);
         BigDecimal tax = new BigDecimal(tokens[10]);
-        BigDecimal total = new BigDecimal(tokens[11]);
+        BigDecimal total = tokens[11].equals("0") ? BigDecimal.ZERO : new BigDecimal(tokens[11]);
 
         Order order = new Order();
         order.setOrderNumber(orderNumber);

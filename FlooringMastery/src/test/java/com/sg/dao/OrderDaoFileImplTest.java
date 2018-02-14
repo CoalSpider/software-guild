@@ -5,7 +5,8 @@
  */
 package com.sg.dao;
 
-import com.sg.common.FlooringUtil;
+import com.sg.exceptions.DuplicateOrderException;
+import com.sg.exceptions.PersistenceException;
 import com.sg.dto.Order;
 import com.sg.dto.Product;
 import com.sg.dto.State;
@@ -46,7 +47,7 @@ public class OrderDaoFileImplTest {
 
     @After
     public void tearDown() {
-        File f = new File("orders", "Order_01019999");
+        File f = new File("orders", "Order_01019999.txt");
         f.delete();
         try {
             f.createNewFile();

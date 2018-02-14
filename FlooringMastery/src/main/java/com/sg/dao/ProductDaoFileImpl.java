@@ -5,6 +5,7 @@
  */
 package com.sg.dao;
 
+import com.sg.exceptions.PersistenceException;
 import com.sg.dto.Product;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +20,7 @@ import java.util.Scanner;
  */
 public class ProductDaoFileImpl implements ProductDao {
 
-    private static final String FILE_NAME = "products";
+    private static final String FILE_NAME = "products.txt";
     private static final String DELIMITER = ",";
 
     private List<Product> products;

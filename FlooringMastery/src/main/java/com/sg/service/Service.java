@@ -5,8 +5,10 @@
  */
 package com.sg.service;
 
-import com.sg.dao.PersistenceException;
+import com.sg.exceptions.PersistenceException;
 import com.sg.dto.Order;
+import com.sg.exceptions.DeletedOrderException;
+import com.sg.exceptions.DuplicateOrderException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public interface Service {
      * @param newData the new order data
      * @throws PersistenceException if there was a error talking to the database
      */
-    void updateOrder(Order order, Order newData) throws PersistenceException;
+    void updateOrder(Order order, Order newData) throws PersistenceException, DeletedOrderException;
 
     /**
      * Creates a order for the given date
@@ -32,7 +34,15 @@ public interface Service {
      * @param date the date to create the order
      * @throws PersistenceException if there was a error talking to the database
      */
-    void createOrder(Order order, LocalDate date) throws PersistenceException;
+    void createOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException;
+
+    /**
+     * Creates a order for today
+     *
+     * @param order the order to create
+     * @throws PersistenceException if there was a error talking to the database
+     */
+    void createOrder(Order order) throws PersistenceException, DuplicateOrderException;
 
     /**
      *
@@ -83,4 +93,14 @@ public interface Service {
      * database
      */
     boolean isValidState(String stateName) throws PersistenceException;
+
+    /**
+     * Used for validating date. For example if you wanted valid dates to be
+     * before or after today or you didnt allow dates for today. Its up to the
+     * implementing class to determine what valid means
+     *
+     * @param date the date to check
+     * @return true if the date is valid.
+     */
+    boolean isValidDate(LocalDate date);
 }

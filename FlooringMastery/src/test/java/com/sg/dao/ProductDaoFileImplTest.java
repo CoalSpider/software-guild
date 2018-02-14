@@ -5,6 +5,7 @@
  */
 package com.sg.dao;
 
+import com.sg.exceptions.PersistenceException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

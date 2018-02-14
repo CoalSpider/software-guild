@@ -57,7 +57,7 @@ public class State {
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!Objects.equals(this.taxRate, other.taxRate)) {
+        if (!Objects.equals(this.taxRate.toPlainString(), other.taxRate.toPlainString())) {
             return false;
         }
         return true;

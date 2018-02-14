@@ -5,6 +5,7 @@
  */
 package com.sg.dao;
 
+import com.sg.exceptions.PersistenceException;
 import com.sg.dto.Product;
 import java.util.List;
 

@@ -67,10 +67,10 @@ public class Product {
         if (!Objects.equals(this.type, other.type)) {
             return false;
         }
-        if (!Objects.equals(this.costPerSquareFoot, other.costPerSquareFoot)) {
+        if (!Objects.equals(this.costPerSquareFoot.toPlainString(), other.costPerSquareFoot.toPlainString())) {
             return false;
         }
-        if (!Objects.equals(this.laborCostPerSquareFoot, other.laborCostPerSquareFoot)) {
+        if (!Objects.equals(this.laborCostPerSquareFoot.toPlainString(), other.laborCostPerSquareFoot.toPlainString())) {
             return false;
         }
         return true;

@@ -5,6 +5,7 @@
  */
 package com.sg.dao;
 
+import com.sg.exceptions.PersistenceException;
 import com.sg.dto.State;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +20,7 @@ import java.util.Scanner;
  */
 public class StateDaoFileImpl implements StateDao {
 
-    private static final String FILE_NAME = "taxes";
+    private static final String FILE_NAME = "taxes.txt";
     private static final String DELIMITER = ",";
 
     private List<State> states;
