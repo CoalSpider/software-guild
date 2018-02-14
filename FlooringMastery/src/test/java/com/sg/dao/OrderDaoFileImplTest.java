@@ -1,4 +1,4 @@
-/*
+  /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -28,11 +28,11 @@ import static org.junit.Assert.*;
  */
 public class OrderDaoFileImplTest {
 
-    private LocalDate orderDate = LocalDate.of(9999, Month.JANUARY, 1);
-    private Order order = new Order();
-    private Product product = new Product("wood", new BigDecimal("1.00"), new BigDecimal("2.00"));
-    private State state = new State("MN", new BigDecimal("7.12"));
-    private int orderNumber = 1;
+    private final LocalDate orderDate = LocalDate.of(9999, Month.JANUARY, 1);
+    private final Order order = new Order();
+    private final Product product = new Product("wood", new BigDecimal("1.00"), new BigDecimal("2.00"));
+    private final State state = new State("MN", new BigDecimal("7.12"));
+    private final int orderNumber = 1;
 
     @Before
     public void setUp() {

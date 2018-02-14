@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
  */
 public class ProductDaoFileImplTest {
 
-    ProductDaoFileImpl impl = new ProductDaoFileImpl();
+    private final ProductDaoFileImpl impl = new ProductDaoFileImpl();
 
     /**
      * Test of getProducts method, of class ProductDaoFileImpl.

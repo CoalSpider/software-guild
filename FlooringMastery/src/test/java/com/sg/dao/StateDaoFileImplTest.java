@@ -5,8 +5,7 @@
  */
 package com.sg.dao;
 
-import com.sg.dto.State;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 
@@ -16,7 +15,7 @@ import org.junit.Test;
  */
 public class StateDaoFileImplTest {
     
-    private StateDaoFileImpl fileImpl = new StateDaoFileImpl();
+    private final StateDaoFileImpl fileImpl = new StateDaoFileImpl();
 
     /**
      * Test of getStates method, of class StateDaoFileImpl.
@@ -24,8 +23,7 @@ public class StateDaoFileImplTest {
     @Test
     public void testGetStates(){
         try{
-            List<State> states = fileImpl.getStates();
-            assert(states.size()==4);
+            assertEquals(4,fileImpl.getStates());
         }catch(PersistenceException e){
             fail(e.getMessage());
         }
