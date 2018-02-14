@@ -21,13 +21,15 @@ public interface OrderDao {
      * @param order the order to create
      * @param date the date of the order
      * @throws DuplicateOrderException if the order already exists
+     * @throws PersistenceException if some error occured with reading the data
      */
-    void createOrder(Order order, LocalDate date) throws DuplicateOrderException;
+    void createOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException;
 
     /**
-     * Delete an order from the specified date
+     * Mark a order as deleted by settings its total field to BigDecimal.ZERO.
+     * Once marked as deleted an order should not be editable
      *
-     * @param order the order to delete
+     * @param order the order to mark as deleted
      * @param data the date of the order
      * @throws PersistenceException if the order was not found
      */
@@ -47,13 +49,22 @@ public interface OrderDao {
      * @param date the date of the given orders
      * @return all orders from the given date. If there are no orders for the
      * given date an empty list is returned
+     * @throws PersistenceException if some error occured with reading the data
      */
-    List<Order> getOrders(LocalDate date);
+    List<Order> getOrders(LocalDate date) throws PersistenceException;
 
     /**
      * @param date the date to check
      * @return an unused (positive) order number for the given date. This would
      * be 0 for the first order of a new day
+     * @throws PersistenceException if some error occured with reading the data
      */
     int getNextOrderNumber(LocalDate date) throws PersistenceException;
+
+    /**
+     * Saves order data
+     *
+     * @throws PersistenceException if something went wrong with saving the data
+     */
+    void saveData() throws PersistenceException;
 }

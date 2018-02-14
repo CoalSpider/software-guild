@@ -17,5 +17,5 @@ public interface ProductDao {
     /**
      * @return a list of products sold
      */
-    List<Product> getProducts();
+    List<Product> getProducts() throws PersistenceException;
 }

@@ -10,5 +10,5 @@ package com.sg.service;
  * @author Ben Norman
  */
 public class ServiceFileImpl implements Service{
-    
+    // TODO: make sure user entered data always has 2 decimal places
 }

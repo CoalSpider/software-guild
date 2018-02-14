@@ -13,10 +13,18 @@ import java.util.Objects;
  * @author Ben Norman
  */
 public class Product {
+
     private final String type;
     private final BigDecimal costPerSquareFoot;
     private final BigDecimal laborCostPerSquareFoot;
 
+    /**
+     * Javadoc test
+     *
+     * @param type the product type wood, carpet, tile, etc..
+     * @param costPerSquareFoot the material cost
+     * @param laborCostPerSquareFoot the install cost
+     */
     public Product(String type, BigDecimal costPerSquareFoot, BigDecimal laborCostPerSquareFoot) {
         this.type = type;
         this.costPerSquareFoot = costPerSquareFoot;
@@ -67,6 +75,5 @@ public class Product {
         }
         return true;
     }
-    
-    
+
 }

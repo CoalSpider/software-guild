@@ -19,7 +19,7 @@ import java.util.Scanner;
  */
 public class StateDaoFileImpl implements StateDao {
 
-    private static final String FILE_NAME = "state_taxes";
+    private static final String FILE_NAME = "taxes";
     private static final String DELIMITER = ",";
 
     private List<State> states;
@@ -30,15 +30,16 @@ public class StateDaoFileImpl implements StateDao {
         }
         states = new ArrayList<>();
         try (Scanner sc = new Scanner(new File(FILE_NAME))) {
+            // skip header line
+            sc.nextLine();
             while (sc.hasNext()) {
                 String[] data = sc.nextLine().split(DELIMITER);
                 states.add(new State(data[0], new BigDecimal(data[1])));
-
             }
         } catch (FileNotFoundException ex) {
             throw new PersistenceException("could not read states file " + ex.getMessage());
         } catch (IndexOutOfBoundsException | NumberFormatException e) {
-            throw new PersistenceException("Error reading state data");
+            throw new PersistenceException("Error reading state data " + e.getMessage());
         }
     }
 

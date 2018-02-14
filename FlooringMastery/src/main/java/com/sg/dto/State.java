@@ -18,7 +18,7 @@ public class State {
 
     /**
      * @param name the state name
-     * @param taxRate the tax rate of the state
+     * @param taxRate the tax rate of the state as a percent
      */
     public State(String name, BigDecimal taxRate) {
         this.name = name;
@@ -29,10 +29,11 @@ public class State {
         return name;
     }
 
+    /** @return the tax rate as a percent*/
     public BigDecimal getTaxRate() {
         return taxRate;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 3;
