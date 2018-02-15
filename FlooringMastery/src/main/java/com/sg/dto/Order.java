@@ -153,7 +153,7 @@ public class Order {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 47 * hash + this.orderNumber;
+//        hash = 47 * hash + this.orderNumber;
         hash = 47 * hash + Objects.hashCode(this.customerName);
         hash = 47 * hash + Objects.hashCode(this.areaInSquareFeet);
         hash = 47 * hash + Objects.hashCode(this.materialCost);
@@ -177,9 +177,9 @@ public class Order {
             return false;
         }
         final Order other = (Order) obj;
-        if (this.orderNumber != other.orderNumber) {
-            return false;
-        }
+//        if (this.orderNumber != other.orderNumber) {
+//            return false;
+//        }
         if (!Objects.equals(this.customerName, other.customerName)) {
             return false;
         }

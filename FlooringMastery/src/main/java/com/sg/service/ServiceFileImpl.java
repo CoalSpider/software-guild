@@ -44,7 +44,7 @@ public class ServiceFileImpl implements Service {
     }
 
     @Override
-    public void deleteOrder(Order order, LocalDate date) throws PersistenceException {
+    public void deleteOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException {
         orderDao.deleteOrder(order, date);
     }
 
@@ -94,9 +94,9 @@ public class ServiceFileImpl implements Service {
     // TODO: move to stateDao.getState() method
     @Override
     public State getState(String stateName) throws PersistenceException {
-        if(isValidState(stateName)){
-            for(State s : stateDao.getStates()){
-                if(s.getName().equals(stateName)){
+        if (isValidState(stateName)) {
+            for (State s : stateDao.getStates()) {
+                if (s.getName().equals(stateName)) {
                     return s;
                 }
             }
@@ -107,13 +107,28 @@ public class ServiceFileImpl implements Service {
     // TODO: move to productDao.getProduct() method
     @Override
     public Product getProduct(String productType) throws PersistenceException {
-        if(isValidProduct(productType)){
-            for(Product p : productDao.getProducts()){
-                if(p.getType().equals(productType)){
+        if (isValidProduct(productType)) {
+            for (Product p : productDao.getProducts()) {
+                if (p.getType().equals(productType)) {
                     return p;
                 }
             }
         }
         throw new PersistenceException("unknown product");
+    }
+
+    @Override
+    public int getOrderNumber(LocalDate date) throws PersistenceException {
+        return orderDao.getNextOrderNumber(date);
+    }
+
+    @Override
+    public List<State> getStates() throws PersistenceException {
+        return stateDao.getStates();
+    }
+
+    @Override
+    public List<Product> getProducts() throws PersistenceException {
+        return productDao.getProducts();
     }
 }

@@ -35,7 +35,7 @@ public interface OrderDao {
      * @param data the date of the order
      * @throws PersistenceException if the order was not found
      */
-    void deleteOrder(Order order, LocalDate date) throws PersistenceException;
+    void deleteOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException;
 
     /**
      * Gets an order with the specified order number from the given date

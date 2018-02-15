@@ -11,7 +11,7 @@ package com.sg.controller;
  */
 public enum Command {
     UNKNOWN(-1), DISPLAY(1), ADD(2), EDIT(3), REMOVE(4), SAVE(5), QUIT(6);
-    private int val;
+    private final int val;
 
     Command(int val) {
         this.val = val;

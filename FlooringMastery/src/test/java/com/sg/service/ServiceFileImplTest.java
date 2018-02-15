@@ -134,6 +134,17 @@ public class ServiceFileImplTest {
             fail("did not catch exception");
         } catch (PersistenceException ex) {
             // pass
+        } catch (DuplicateOrderException ex) {
+            fail(ex.getMessage());
+        }
+        
+        try{
+            service.deleteOrder(expected, testDate);
+            fail("did no catch duplicate");
+        } catch (PersistenceException ex) {
+            fail(ex.getMessage());
+        } catch (DuplicateOrderException ex) {
+            //yay
         }
     }
 
@@ -171,9 +182,12 @@ public class ServiceFileImplTest {
         try {
             // test file Order_01019990.txt should have 4 orders in it
             assertEquals(4, service.getOrders(LocalDate.of(9990, 01, 01)).size());
+            assertEquals(4, service.getOrders(LocalDate.of(9990, 01, 01)).size());
             // test file Order_01010000.txt should have 0 orders in it
             assertEquals(0, service.getOrders(testDate).size());
+            assertEquals(0, service.getOrders(testDate).size());
             // confirm that a date that doesnt exist blank list
+            assertEquals(0, service.getOrders(LocalDate.of(9993, 01, 01)).size());
             assertEquals(0, service.getOrders(LocalDate.of(9993, 01, 01)).size());
         } catch (PersistenceException ex) {
             fail(ex.getMessage());
@@ -342,6 +356,56 @@ public class ServiceFileImplTest {
             fail("did not catch error");
         } catch (PersistenceException ex) {
             // pass
+        }
+    }
+
+    @Test
+    public void testGetOrderNumber() {
+        try {
+            assertEquals(1, service.getOrderNumber(testDate));
+            
+            service.createOrder(expected,testDate);
+            
+            assertEquals(2,service.getOrderNumber(testDate));
+            
+            Order order2 = new Order();
+            order2.setCustomerName("TestManB");
+            order2.setAreaInSquareFeet(new BigDecimal(1 * 10));
+            // service layer will prevent invalid product types and invalid states
+            order2.setProduct(new Product("candy", new BigDecimal("0.01"), new BigDecimal("9")));
+            order2.setState(new State("MN", new BigDecimal("1.2")));
+            
+            service.createOrder(order2,testDate);
+            
+            assertEquals(3,service.getOrderNumber(testDate));
+            
+            // file should have 4 orders so next is 5
+            assertEquals(5,service.getOrderNumber(LocalDate.of(9990, 01, 01)));
+            
+        } catch (PersistenceException | DuplicateOrderException ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testGetStates() {
+        try {
+            assertEquals(4, states.getStates().size());
+            assertEquals(4, states.getStates().size());
+            assertEquals(4, states.getStates().size());
+        } catch (PersistenceException ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testGetProducts() {
+        try {
+            assertEquals(4, products.getProducts().size());
+            assertEquals(4, products.getProducts().size());
+            assertEquals(4, products.getProducts().size());
+        } catch (PersistenceException ex) {
+            fail(ex.getMessage());
         }
     }
 }

@@ -24,7 +24,10 @@ public class StateDaoFileImplTest {
     @Test
     public void testGetStates(){
         try{
-            assertEquals(4,fileImpl.getStates());
+            assertEquals(4,fileImpl.getStates().size());
+            assertEquals(4,fileImpl.getStates().size());
+            assertEquals(4,fileImpl.getStates().size());
+            assertEquals(4,fileImpl.getStates().size());
         }catch(PersistenceException e){
             fail(e.getMessage());
         }

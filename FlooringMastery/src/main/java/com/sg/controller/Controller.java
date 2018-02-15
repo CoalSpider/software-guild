@@ -13,6 +13,7 @@ import com.sg.exceptions.PersistenceException;
 import com.sg.service.Service;
 import com.sg.view.View;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  *
@@ -76,11 +77,17 @@ public class Controller {
      * should return a valid command ie: not an unknown command
      */
     private Command getMenuChoice() {
-        return view.getMenuChoice();
+        return view.askForMenuChoice();
     }
 
     private void displayOrders() throws PersistenceException {
-        view.displayOrders(service.getOrders(getDate()));
+        LocalDate date = getDate();
+        List<Order> orders = service.getOrders(date);
+        if (orders.isEmpty()) {
+            view.displayNoOrdersForDate();
+        } else {
+            view.displayOrders(orders);
+        }
     }
 
     private LocalDate getDate() {
@@ -96,6 +103,7 @@ public class Controller {
 
     private void addOrder() throws PersistenceException, DuplicateOrderException {
         Order order = new Order();
+        order.setOrderNumber(service.getOrderNumber(LocalDate.now()));
         order.setCustomerName(view.askForName());
         order.setState(getState());
         order.setProduct(getProduct());
@@ -131,20 +139,30 @@ public class Controller {
         } while (true);
     }
 
-    private void editOrder() throws PersistenceException{
+    private void editOrder() throws PersistenceException {
         LocalDate date = view.askForDate();
-        int orderNumber = view.askForOrderNumber();
-        Order order = service.getOrder(orderNumber, date);
-        view.editOrder(order);
+        if (service.isValidDate(date) == false) {
+            System.out.println("Date must be before or on today");
+        } else if (service.getOrders(date).isEmpty()) {
+            view.displayNoOrdersForDate();
+        } else {
+            int orderNumber = view.askForOrderNumber();
+            Order order = service.getOrder(orderNumber, date);
+            view.editOrder(order, service.getProducts(), service.getStates());
+        }
     }
 
-    private void removeOrder() throws PersistenceException {
+    private void removeOrder() throws PersistenceException, DuplicateOrderException {
         LocalDate date = view.askForDate();
-        int orderNumber = view.askForOrderNumber();
-        Order order = service.getOrder(orderNumber, date);
-        boolean confirmDelete = view.askToConfirmDelete();
-        if (confirmDelete) {
-            service.deleteOrder(order, date);
+        if (service.getOrders(date).isEmpty()) {
+            view.displayNoOrdersForDate();
+        } else {
+            int orderNumber = view.askForOrderNumber();
+            Order order = service.getOrder(orderNumber, date);
+            boolean confirmDelete = view.askToConfirmDelete();
+            if (confirmDelete) {
+                service.deleteOrder(order, date);
+            }
         }
     }
 

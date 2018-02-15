@@ -5,11 +5,18 @@
  */
 package com.sg;
 
+import com.sg.controller.Controller;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 /**
  *
  * @author Ben Norman
  */
 public class App {
     public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        Controller controller = context.getBean("controller", Controller.class);
+        controller.run();
     }
 }

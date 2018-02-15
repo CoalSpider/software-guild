@@ -124,6 +124,10 @@ public class OrderDaoFileImpl implements OrderDao {
      * more than one file found matching the date
      */
     private File getOrderFile(LocalDate date) throws PersistenceException {
+        // skip if in memory
+        if(allOrders.containsKey(date)){
+            return null;
+        }
         String dateAsString = date.format(DATE_FORMAT);
         try (Stream<Path> fileStream = Files.walk(Paths.get(FOLDER_NAME))) {
             List<File> files = fileStream.map(Path::toFile).filter((file) -> file.getName().contains(dateAsString)).collect(Collectors.toList());
@@ -231,10 +235,13 @@ public class OrderDaoFileImpl implements OrderDao {
     }
 
     @Override
-    public void deleteOrder(Order order, LocalDate date) throws PersistenceException {
+    public void deleteOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException {
         readOrderFileIfNotNull(getOrderFile(date));
         if (allOrders.containsKey(date)) {
             if (allOrders.get(date).contains(order)) {
+                if(order.isDeleted()){
+                    throw new DuplicateOrderException("order already deleted");
+                }
                 order.setTotal(BigDecimal.ZERO);
             } else {
                 throw new PersistenceException("order does not exist for given date");

@@ -44,7 +44,7 @@ public interface Service {
      * @throws PersistenceException if the given order does not exist for the
      * given date
      */
-    void deleteOrder(Order order, LocalDate date) throws PersistenceException;
+    void deleteOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException;
 
     /**
      * @param orderNumber the number of the order
@@ -105,7 +105,7 @@ public interface Service {
      * or the state name doesnt exist
      */
     State getState(String stateName) throws PersistenceException;
-    
+
     /**
      *
      * @param productType the name of the product ie wood, carpet, vinyl, etc...
@@ -114,4 +114,23 @@ public interface Service {
      * or the product type doesnt exist
      */
     Product getProduct(String productType) throws PersistenceException;
+
+    /**
+     * @param date the date to check
+     * @return the next order number to use
+     * @throws PersistenceException if there was a issue talking to the database
+     */
+    int getOrderNumber(LocalDate date) throws PersistenceException;
+    
+    /**
+     * @return a list of states that are sold
+     * @throws PersistenceException if there was an error talking to the database
+     */
+    List<State> getStates() throws PersistenceException;
+    
+    /**
+     * @return a list of products that are sold
+     * @throws PersistenceException if there was an error talking to the database
+     */
+    List<Product> getProducts() throws PersistenceException;
 }

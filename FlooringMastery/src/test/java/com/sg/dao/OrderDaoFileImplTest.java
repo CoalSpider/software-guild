@@ -1,4 +1,4 @@
-  /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -18,6 +18,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -150,6 +152,17 @@ public class OrderDaoFileImplTest {
             fail("did not catch error");
         } catch (PersistenceException e) {
             // yay 
+        } catch (DuplicateOrderException ex) {
+            fail(ex.getMessage());
+        }
+
+        try {
+            fileImpl.deleteOrder(order, orderDate);
+            fail("did no catch duplicate");
+        } catch (DuplicateOrderException ex) {
+            // yay
+        } catch (PersistenceException ex) {
+            fail(ex.getMessage());
         }
     }
 
@@ -201,7 +214,10 @@ public class OrderDaoFileImplTest {
             // cofirm getting all from date didnt break;
             List<Order> orders = fileImpl.getOrders(orderDate);
             // confirm we got what we think we got (same hash code to)
-            assertEquals(orderNumber, orders.size());
+            assertEquals(1, orders.size());
+
+            assertEquals(4, fileImpl.getOrders(orderDate.minusYears(9)).size());
+            assertEquals(4, fileImpl.getOrders(orderDate.minusYears(9)).size());
         } catch (PersistenceException | DuplicateOrderException ex) {
             fail(ex.getMessage());
         }
@@ -291,13 +307,13 @@ public class OrderDaoFileImplTest {
         // confrim we got what we wanted
         try {
             Order a = fileImpl.getOrder(1, orderDate);
-            assert(order.equals(a));
+            assert (order.equals(a));
 
             Order b = fileImpl.getOrder(2, orderDate);
-            assert(order2.equals(b));
+            assert (order2.equals(b));
 
             Order c = fileImpl.getOrder(3, orderDate);
-            assert(order3.equals(c));
+            assert (order3.equals(c));
         } catch (PersistenceException ex) {
             fail(ex.getMessage());
         }
