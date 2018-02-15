@@ -5,7 +5,7 @@
  */
 package com.sg.dao;
 
-import com.sg.exceptions.DuplicateOrderException;
+import com.sg.exceptions.AlreadyDeletedException;
 import com.sg.exceptions.PersistenceException;
 import com.sg.dto.Order;
 import com.sg.dto.Product;
@@ -216,14 +216,8 @@ public class OrderDaoFileImpl implements OrderDao {
     }
 
     @Override
-    public void createOrder(Order order, LocalDate date) throws DuplicateOrderException, PersistenceException {
+    public void createOrder(Order order, LocalDate date)throws PersistenceException {
         readOrderFileIfNotNull(getOrderFile(date));
-        // if the order already exists throw
-        if (allOrders.containsKey(date)) {
-            if (allOrders.get(date).contains(order)) {
-                throw new DuplicateOrderException("order already exists");
-            }
-        }
 
         // set the order number
         int orderNumber = getNextOrderNumber(date);
@@ -235,12 +229,12 @@ public class OrderDaoFileImpl implements OrderDao {
     }
 
     @Override
-    public void deleteOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException {
+    public void deleteOrder(Order order, LocalDate date) throws PersistenceException, AlreadyDeletedException {
         readOrderFileIfNotNull(getOrderFile(date));
         if (allOrders.containsKey(date)) {
             if (allOrders.get(date).contains(order)) {
                 if(order.isDeleted()){
-                    throw new DuplicateOrderException("order already deleted");
+                    throw new AlreadyDeletedException("order already deleted");
                 }
                 order.setTotal(BigDecimal.ZERO);
             } else {

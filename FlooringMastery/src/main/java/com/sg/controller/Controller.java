@@ -8,7 +8,7 @@ package com.sg.controller;
 import com.sg.dto.Order;
 import com.sg.dto.Product;
 import com.sg.dto.State;
-import com.sg.exceptions.DuplicateOrderException;
+import com.sg.exceptions.AlreadyDeletedException;
 import com.sg.exceptions.PersistenceException;
 import com.sg.service.Service;
 import com.sg.view.View;
@@ -55,8 +55,8 @@ public class Controller {
                 }
             } catch (PersistenceException ex) {
                 displayErrorMsg(ex.getMessage());
-            } catch (DuplicateOrderException ex) {
-                displayDuplicateOrderMsg();
+            } catch (AlreadyDeletedException ex) {
+                displayAlreadyDeletedOrderMsg();
             }
         } while (true);
     }
@@ -69,17 +69,54 @@ public class Controller {
         view.displayErrorMsg(errorMsg);
     }
 
-    private void displayDuplicateOrderMsg() {
-        view.displayDuplicateOrderMsg();
+    private void displayAlreadyDeletedOrderMsg() {
+        view.displayAlreadyDeletedOrderMsg();
     }
 
-    /**
-     * should return a valid command ie: not an unknown command
-     */
+    /** always returns a valid command **/
     private Command getMenuChoice() {
         return view.askForMenuChoice();
     }
 
+    private LocalDate getDate() throws PersistenceException {
+        do {
+            LocalDate date = view.askForDate();
+            if (service.isValidDate(date)) {
+                view.displayOrders(service.getOrders(date));
+                return date;
+            } else {
+                view.displayInvalidDateMsg();
+            }
+        } while (true);
+    }
+
+    private State getState() throws PersistenceException {
+        do {
+            String stateName = view.askForState(service.getStates());
+            if (service.isValidState(stateName)) {
+                return service.getState(stateName);
+            } else {
+                view.displayInvalidStateMsg();
+            }
+        } while (true);
+    }
+
+    private Product getProduct() throws PersistenceException {
+        do {
+            String productName = view.askForProduct(service.getProducts());
+            if (service.isValidProduct(productName)) {
+                return service.getProduct(productName);
+            } else {
+                view.displayInvalidProductMsg();
+            }
+        } while (true);
+    }
+
+    /* 
+     * ================================================================
+     *                  DISPLAY ORDERS COMMAND
+     * ================================================================
+     */
     private void displayOrders() throws PersistenceException {
         LocalDate date = getDate();
         List<Order> orders = service.getOrders(date);
@@ -90,18 +127,12 @@ public class Controller {
         }
     }
 
-    private LocalDate getDate() {
-        do {
-            LocalDate date = view.askForDate();
-            if (service.isValidDate(date)) {
-                return date;
-            } else {
-                view.displayInvalidDateMsg();
-            }
-        } while (true);
-    }
-
-    private void addOrder() throws PersistenceException, DuplicateOrderException {
+    /* 
+     * ================================================================
+     *                  ADD ORDER COMMAND
+     * ================================================================
+     */
+    private void addOrder() throws PersistenceException, AlreadyDeletedException {
         Order order = new Order();
         order.setOrderNumber(service.getOrderNumber(LocalDate.now()));
         order.setCustomerName(view.askForName());
@@ -116,49 +147,36 @@ public class Controller {
         }
     }
 
-    // view get state if empty return origonal state
-    private State getState() throws PersistenceException {
-        do {
-            String stateName = view.askForState();
-            if (service.isValidState(stateName)) {
-                return service.getState(stateName);
-            } else {
-                view.displayInvalidStateMsg();
-            }
-        } while (true);
-    }
-
-    private Product getProduct() throws PersistenceException {
-        do {
-            String productName = view.askForProduct();
-            if (service.isValidProduct(productName)) {
-                return service.getProduct(productName);
-            } else {
-                view.displayInvalidProductMsg();
-            }
-        } while (true);
-    }
-
+    /* 
+     * ================================================================
+     *                  EDIT ORDER COMMAND
+     * ================================================================
+     */
     private void editOrder() throws PersistenceException {
-        LocalDate date = view.askForDate();
-        if (service.isValidDate(date) == false) {
-            System.out.println("Date must be before or on today");
-        } else if (service.getOrders(date).isEmpty()) {
-            view.displayNoOrdersForDate();
-        } else {
-            int orderNumber = view.askForOrderNumber();
-            Order order = service.getOrder(orderNumber, date);
-            view.editOrder(order, service.getProducts(), service.getStates());
-        }
-    }
-
-    private void removeOrder() throws PersistenceException, DuplicateOrderException {
-        LocalDate date = view.askForDate();
+        LocalDate date = getDate();
         if (service.getOrders(date).isEmpty()) {
             view.displayNoOrdersForDate();
         } else {
             int orderNumber = view.askForOrderNumber();
             Order order = service.getOrder(orderNumber, date);
+            view.editOrder(order, service.getProducts(), service.getStates());
+            view.displayOrder(order);
+        }
+    }
+
+    /* 
+     * ================================================================
+     *                  REMOVE ORDER COMMAND
+     * ================================================================
+     */
+    private void removeOrder() throws PersistenceException, AlreadyDeletedException {
+        LocalDate date = getDate();
+        if (service.getOrders(date).isEmpty()) {
+            view.displayNoOrdersForDate();
+        } else {
+            int orderNumber = view.askForOrderNumber();
+            Order order = service.getOrder(orderNumber, date);
+            view.displayOrder(order);
             boolean confirmDelete = view.askToConfirmDelete();
             if (confirmDelete) {
                 service.deleteOrder(order, date);
@@ -166,11 +184,20 @@ public class Controller {
         }
     }
 
-    // TODO: do not call in training mode
+    /* 
+     * ================================================================
+     *                  SAVE COMMAND
+     * ================================================================
+     */
     private void save() throws PersistenceException {
         service.save();
     }
 
+    /* 
+     * ================================================================
+     *                  QUIT COMMAND
+     * ================================================================
+     */
     private void quit() {
         view.displayGoodbyMessage();
         System.exit(0);

@@ -11,8 +11,7 @@ import com.sg.dao.StateDaoFileImpl;
 import com.sg.dto.Order;
 import com.sg.dto.Product;
 import com.sg.dto.State;
-import com.sg.exceptions.DeletedOrderException;
-import com.sg.exceptions.DuplicateOrderException;
+import com.sg.exceptions.AlreadyDeletedException;
 import com.sg.exceptions.PersistenceException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,7 +54,7 @@ public class ServiceFileImplTest {
     @Before
     public void setUp() {
         // reset OrderDaoFileImpl between tests
-        service = new ServiceFileImpl(new OrderDaoFileImpl(), products, states);
+        service = new ServiceFileImpl(new OrderDaoFileImpl(), products, states, "production");
 
         expected.setOrderNumber(1);
         expected.setCustomerName("TestManA");
@@ -94,18 +93,15 @@ public class ServiceFileImplTest {
             // test that we added what we think we added
             Order got = service.getOrder(1, testDate);
             assertEquals(expected, got);
-        } catch (PersistenceException | DuplicateOrderException ex) {
+        } catch (PersistenceException ex) {
             fail(ex.getMessage());
         }
 
         try {
-            // confrim duplicate order exception thrown
+            // confrim creating same order does not fail
             service.createOrder(expected, testDate);
-            fail("did not catch dupe exception");
         } catch (PersistenceException ex) {
             fail(ex.getMessage());
-        } catch (DuplicateOrderException ex) {
-            // pass
         }
     }
 
@@ -124,7 +120,7 @@ public class ServiceFileImplTest {
             service.deleteOrder(expected, testDate);
             // confirm deleted
             assertEquals(BigDecimal.ZERO, service.getOrder(1, testDate).getTotal());
-        } catch (PersistenceException | DuplicateOrderException ex) {
+        } catch (PersistenceException | AlreadyDeletedException ex) {
             fail(ex.getMessage());
         }
 
@@ -134,7 +130,7 @@ public class ServiceFileImplTest {
             fail("did not catch exception");
         } catch (PersistenceException ex) {
             // pass
-        } catch (DuplicateOrderException ex) {
+        } catch (AlreadyDeletedException ex) {
             fail(ex.getMessage());
         }
         
@@ -143,7 +139,7 @@ public class ServiceFileImplTest {
             fail("did no catch duplicate");
         } catch (PersistenceException ex) {
             fail(ex.getMessage());
-        } catch (DuplicateOrderException ex) {
+        } catch (AlreadyDeletedException ex) {
             //yay
         }
     }
@@ -222,12 +218,12 @@ public class ServiceFileImplTest {
 
             // confirm writing goes without a hitch
             service.save();
-        } catch (PersistenceException | DuplicateOrderException ex) {
+        } catch (PersistenceException | AlreadyDeletedException ex) {
             fail(ex.getMessage());
         }
 
         // now we "exit" the program and read the data in
-        service = new ServiceFileImpl(new OrderDaoFileImpl(), products, states);
+        service = new ServiceFileImpl(new OrderDaoFileImpl(), products, states, "production");
         // confrim we got what we wanted
         try {
             Order a = service.getOrder(1, testDate);
@@ -240,6 +236,17 @@ public class ServiceFileImplTest {
             assert (order3.equals(c));
         } catch (PersistenceException ex) {
             fail(ex.getMessage());
+        }
+    }
+    
+    @Test
+    public void testCantSaveInTraining(){
+        service = new ServiceFileImpl(new OrderDaoFileImpl(),products,states,"training");
+        try{
+            service.save();
+            fail("allowed to save data in training mode");
+        } catch (PersistenceException ex) {
+            // pass
         }
     }
 
@@ -382,7 +389,7 @@ public class ServiceFileImplTest {
             // file should have 4 orders so next is 5
             assertEquals(5,service.getOrderNumber(LocalDate.of(9990, 01, 01)));
             
-        } catch (PersistenceException | DuplicateOrderException ex) {
+        } catch (PersistenceException ex) {
             fail(ex.getMessage());
         }
     }

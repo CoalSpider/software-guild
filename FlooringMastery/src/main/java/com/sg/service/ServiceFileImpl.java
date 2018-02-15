@@ -12,8 +12,7 @@ import com.sg.dao.StateDao;
 import com.sg.dto.Order;
 import com.sg.dto.Product;
 import com.sg.dto.State;
-import com.sg.exceptions.DeletedOrderException;
-import com.sg.exceptions.DuplicateOrderException;
+import com.sg.exceptions.AlreadyDeletedException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,25 +25,27 @@ public class ServiceFileImpl implements Service {
     private final OrderDao orderDao;
     private final ProductDao productDao;
     private final StateDao stateDao;
+    private final String mode;
 
-    public ServiceFileImpl(OrderDao orderDao, ProductDao productDao, StateDao stateDao) {
+    public ServiceFileImpl(OrderDao orderDao, ProductDao productDao, StateDao stateDao, String mode) {
         this.orderDao = orderDao;
         this.productDao = productDao;
         this.stateDao = stateDao;
+        this.mode = mode;
     }
 
     @Override
-    public void createOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException {
+    public void createOrder(Order order, LocalDate date) throws PersistenceException {
         orderDao.createOrder(order, date);
     }
 
     @Override
-    public void createOrder(Order order) throws PersistenceException, DuplicateOrderException {
+    public void createOrder(Order order) throws PersistenceException {
         orderDao.createOrder(order, LocalDate.now());
     }
 
     @Override
-    public void deleteOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException {
+    public void deleteOrder(Order order, LocalDate date) throws PersistenceException, AlreadyDeletedException {
         orderDao.deleteOrder(order, date);
     }
 
@@ -58,10 +59,12 @@ public class ServiceFileImpl implements Service {
         return orderDao.getOrders(date);
     }
 
-    //TODO: do not call in training mode
     @Override
     public void save() throws PersistenceException {
         orderDao.saveData();
+        if (mode.equalsIgnoreCase("training")) {
+            throw new PersistenceException("cannot save in training mode");
+        }
     }
 
     @Override

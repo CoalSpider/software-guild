@@ -5,7 +5,7 @@
  */
 package com.sg.dao;
 
-import com.sg.exceptions.DuplicateOrderException;
+import com.sg.exceptions.AlreadyDeletedException;
 import com.sg.exceptions.PersistenceException;
 import com.sg.dto.Order;
 import com.sg.dto.Product;
@@ -18,8 +18,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,7 +79,7 @@ public class OrderDaoFileImplTest {
             fileImpl.createOrder(order, orderDate);
             // confirm that something was added
             assertEquals(1, fileImpl.getOrders(orderDate).size());
-        } catch (DuplicateOrderException | PersistenceException ex) {
+        } catch (PersistenceException ex) {
             fail(ex.getMessage());
         }
 
@@ -93,19 +91,10 @@ public class OrderDaoFileImplTest {
             fail(ex.getMessage());
         }
 
-        // confim that a duplicate exception is thrown for adding the order to the same date
-        try {
-            fileImpl.createOrder(order, orderDate);
-            fail("did not catch error");
-        } catch (DuplicateOrderException e) {
-            // pass
-        } catch (PersistenceException ex) {
-            fail(ex.getMessage());
-        }
-        // confirm that no exception is thrown for adding the order with the same data to a different date
+        // confirm that no exception is thrown for adding the order order number to a different date
         try {
             fileImpl.createOrder(order, LocalDate.of(9998, 1, 1));
-        } catch (DuplicateOrderException | PersistenceException e) {
+        } catch (PersistenceException e) {
             fail(e.getMessage());
         }
         try {
@@ -142,24 +131,24 @@ public class OrderDaoFileImplTest {
             // confirm we marked deletion but did not remove from list
             assertEquals(1, fileImpl.getOrders(orderDate).size());
             assertEquals(BigDecimal.ZERO, fileImpl.getOrder(1, orderDate).getTotal());
-        } catch (PersistenceException | DuplicateOrderException ex) {
+        } catch (PersistenceException | AlreadyDeletedException ex) {
             fail(ex.getMessage());
         }
 
-        // confirm trying to delete something that doesnt exist throws
+        // confirm trying to delete  the same order twice fails
         try {
             fileImpl.deleteOrder(order, orderDate.minusYears(1));
             fail("did not catch error");
         } catch (PersistenceException e) {
             // yay 
-        } catch (DuplicateOrderException ex) {
+        } catch (AlreadyDeletedException ex) {
             fail(ex.getMessage());
         }
 
         try {
             fileImpl.deleteOrder(order, orderDate);
             fail("did no catch duplicate");
-        } catch (DuplicateOrderException ex) {
+        } catch (AlreadyDeletedException ex) {
             // yay
         } catch (PersistenceException ex) {
             fail(ex.getMessage());
@@ -180,7 +169,7 @@ public class OrderDaoFileImplTest {
             Order gottenOrder = fileImpl.getOrder(orderNumber, orderDate);
             // confirm we got what we think we got
             assertEquals(gottenOrder, order);
-        } catch (PersistenceException | DuplicateOrderException ex) {
+        } catch (PersistenceException ex) {
             fail(ex.getMessage());
         }
 
@@ -218,7 +207,7 @@ public class OrderDaoFileImplTest {
 
             assertEquals(4, fileImpl.getOrders(orderDate.minusYears(9)).size());
             assertEquals(4, fileImpl.getOrders(orderDate.minusYears(9)).size());
-        } catch (PersistenceException | DuplicateOrderException ex) {
+        } catch (PersistenceException ex) {
             fail(ex.getMessage());
         }
 
@@ -252,7 +241,7 @@ public class OrderDaoFileImplTest {
             assertEquals(2, fileImpl.getNextOrderNumber(orderDate));
             // confirm its still 2
             assertEquals(2, fileImpl.getNextOrderNumber(orderDate));
-        } catch (DuplicateOrderException | PersistenceException ex) {
+        } catch (PersistenceException ex) {
             fail(ex.getMessage());
         }
 
@@ -298,7 +287,7 @@ public class OrderDaoFileImplTest {
 
             // confirm writing goes without a hitch
             fileImpl.saveData();
-        } catch (PersistenceException | DuplicateOrderException ex) {
+        } catch (PersistenceException | AlreadyDeletedException ex) {
             fail(ex.getMessage());
         }
 

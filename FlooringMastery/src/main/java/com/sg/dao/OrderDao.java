@@ -5,7 +5,7 @@
  */
 package com.sg.dao;
 
-import com.sg.exceptions.DuplicateOrderException;
+import com.sg.exceptions.AlreadyDeletedException;
 import com.sg.exceptions.PersistenceException;
 import com.sg.dto.Order;
 import java.time.LocalDate;
@@ -22,10 +22,9 @@ public interface OrderDao {
      *
      * @param order the order to create
      * @param date the date of the order
-     * @throws DuplicateOrderException if the order already exists
      * @throws PersistenceException if some error occured with reading the data
      */
-    void createOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException;
+    void createOrder(Order order, LocalDate date) throws PersistenceException;
 
     /**
      * Mark a order as deleted by settings its total field to BigDecimal.ZERO.
@@ -35,7 +34,7 @@ public interface OrderDao {
      * @param data the date of the order
      * @throws PersistenceException if the order was not found
      */
-    void deleteOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException;
+    void deleteOrder(Order order, LocalDate date) throws PersistenceException, AlreadyDeletedException;
 
     /**
      * Gets an order with the specified order number from the given date

@@ -10,7 +10,7 @@ import com.sg.dto.Order;
 import com.sg.dto.Product;
 import com.sg.dto.State;
 import com.sg.exceptions.DeletedOrderException;
-import com.sg.exceptions.DuplicateOrderException;
+import com.sg.exceptions.AlreadyDeletedException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public interface Service {
      * @param date the date to create the order
      * @throws PersistenceException if there was a error talking to the database
      */
-    void createOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException;
+    void createOrder(Order order, LocalDate date) throws PersistenceException;
 
     /**
      * Creates a order for today
@@ -35,7 +35,7 @@ public interface Service {
      * @param order the order to create
      * @throws PersistenceException if there was a error talking to the database
      */
-    void createOrder(Order order) throws PersistenceException, DuplicateOrderException;
+    void createOrder(Order order) throws PersistenceException;
 
     /**
      *
@@ -44,7 +44,7 @@ public interface Service {
      * @throws PersistenceException if the given order does not exist for the
      * given date
      */
-    void deleteOrder(Order order, LocalDate date) throws PersistenceException, DuplicateOrderException;
+    void deleteOrder(Order order, LocalDate date) throws PersistenceException, AlreadyDeletedException;
 
     /**
      * @param orderNumber the number of the order

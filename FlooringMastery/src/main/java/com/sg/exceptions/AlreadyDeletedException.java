@@ -9,24 +9,24 @@ package com.sg.exceptions;
  *
  * @author Ben Norman
  */
-public class DuplicateOrderException extends Exception{
+public class AlreadyDeletedException extends Exception{
 
-    public DuplicateOrderException() {
+    public AlreadyDeletedException() {
     }
 
-    public DuplicateOrderException(String message) {
+    public AlreadyDeletedException(String message) {
         super(message);
     }
 
-    public DuplicateOrderException(String message, Throwable cause) {
+    public AlreadyDeletedException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public DuplicateOrderException(Throwable cause) {
+    public AlreadyDeletedException(Throwable cause) {
         super(cause);
     }
 
-    public DuplicateOrderException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public AlreadyDeletedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
     
