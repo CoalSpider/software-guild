@@ -1,3 +1,5 @@
 OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
 1,Rich Man,OH,6.25,Tile,1500.00,3.50,4.15,5250.00,6225.00,717.19,12192.19
 2,Rich Man,OH,6.25,Carpet,500.00,2.25,2.10,1125.00,1050.00,135.94,2310.94
+3,[CANCELED]Dan,IN,6.00,Laminate,52.13,1.75,2.10,91.23,109.47,12.04,212.74
+4,Dan,IN,6.00,Laminate,52.13,1.75,2.10,91.23,109.47,12.04,212.74

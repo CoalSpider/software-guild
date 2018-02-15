@@ -110,7 +110,7 @@ public class OrderDaoFileImplTest {
         // comfirm deleted order stays deleted
         try {
             Order deletedOrder = fileImpl.getOrder(2, orderDate.minusYears(9));
-            assertEquals(BigDecimal.ZERO, deletedOrder.getTotal());
+            assertTrue(deletedOrder.isDeleted());
         } catch (PersistenceException ex) {
             fail(ex.getMessage());
         }
@@ -130,7 +130,7 @@ public class OrderDaoFileImplTest {
             fileImpl.deleteOrder(order, orderDate);
             // confirm we marked deletion but did not remove from list
             assertEquals(1, fileImpl.getOrders(orderDate).size());
-            assertEquals(BigDecimal.ZERO, fileImpl.getOrder(1, orderDate).getTotal());
+            assertTrue(fileImpl.getOrder(1, orderDate).isDeleted());
         } catch (PersistenceException | AlreadyDeletedException ex) {
             fail(ex.getMessage());
         }
@@ -267,6 +267,9 @@ public class OrderDaoFileImplTest {
         // service layer will prevent invalid product types and invalid states
         order2.setProduct(new Product("candy", new BigDecimal("0.01"), new BigDecimal("9")));
         order2.setState(new State("MN", new BigDecimal("1.2")));
+        // force calculation
+        order2.getTotal();
+        System.out.println("order2 = " + order2.getTotal().toPlainString());
 
         Order order3 = new Order();
         order3.setCustomerName("TestManB");
@@ -274,6 +277,8 @@ public class OrderDaoFileImplTest {
         // service layer will prevent invalid product types and invalid states
         order3.setProduct(new Product("solid gold", new BigDecimal("1231"), new BigDecimal("500")));
         order3.setState(new State("BD", new BigDecimal("15")));
+        // force calculation
+        order3.getTotal();
 
         try {
             // create order 1
@@ -299,7 +304,9 @@ public class OrderDaoFileImplTest {
             assert (order.equals(a));
 
             Order b = fileImpl.getOrder(2, orderDate);
-            assert (order2.equals(b));
+            System.out.println("2="+order2);
+            System.out.println("b="+b);
+            assertEquals(order2,b);
 
             Order c = fileImpl.getOrder(3, orderDate);
             assert (order3.equals(c));

@@ -77,8 +77,8 @@ public class View {
         Product p = order.getProduct();
         orderTable.addRow(
                 order.getOrderNumber(),
-                order.getCustomerName(),
-                "$" + order.getAreaInSquareFeet().toPlainString(),
+                order.isDeleted() ? order.getCustomerName().replaceAll("\\[CANCELED\\]", "") : order.getCustomerName(),
+                order.getAreaInSquareFeet().toPlainString(),
                 s.getName(),
                 s.getTaxRate() + "%",
                 p.getType(),
@@ -87,13 +87,14 @@ public class View {
                 "$" + order.getMaterialCost().toEngineeringString(),
                 "$" + order.getLaborCost().toPlainString(),
                 "$" + order.getTax().toPlainString(),
-                "$" + order.getTotal().toPlainString());
+                // mark as red for deleted
+                "$" + order.getTotal().toPlainString(),
+                order.isDeleted() ? "[CACELED]" : "[ACTIVE]  ");
         orderTable.addRule();
     }
 
     public void displayOrders(List<Order> orders) {
         AsciiTable orderTable = new AsciiTable();
-        System.out.println("TODO: override render for colors");
         orderTable.addRule();
         orderTable.addRow(
                 "#",
@@ -107,7 +108,8 @@ public class View {
                 "Material Total",
                 "Labor Total",
                 "Tax",
-                "Total");
+                "Total",
+                "Status");
         orderTable.addRule();
         for (Order order : orders) {
             displayOrder(orderTable, order);
@@ -129,17 +131,18 @@ public class View {
 
     public void displayInvalidProductMsg() {
         io.println("product is not sold or does not exist");
-        promptContinue();
     }
 
     public void displayInvalidStateMsg() {
         io.println("state does not exist or products are not sold there");
-        promptContinue();
+    }
+
+    public void displayDateAfterTodayMsg() {
+        io.println("Invalid date. Date must be before or on today");
     }
 
     public void displayInvalidDateMsg() {
-        io.println("Invalid date. Date must be before or on today");
-        promptContinue();
+        io.println("Invalid date. Date must be in form MM-dd-yyyy.");
     }
 
     public void displayGoodbyMessage() {
@@ -182,12 +185,16 @@ public class View {
         } while (true);
     }
 
+    private final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+
     public LocalDate askForDate() {
         do {
             try {
-                LocalDate date = LocalDate.parse(io.readString("Enter Date MM-dd-yyyy: "), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+                String dateString = io.readString("Enter Date MM-dd-yyyy: ");
+                dateString = fixFormattingForSingleDigits(dateString);
+                LocalDate date = LocalDate.parse(dateString, dateTimeFormat);
                 if (date.isAfter(LocalDate.now())) {
-                    displayInvalidDateMsg();
+                    this.displayDateAfterTodayMsg();
                 } else {
                     return date;
                 }
@@ -197,17 +204,38 @@ public class View {
         } while (true);
     }
 
-    public String askForName() {
-        return io.readString("Enter Name: ");
+    private String fixFormattingForSingleDigits(String dateString) {
+        StringBuilder newDateString = new StringBuilder();
+        String[] dateParts = dateString.split("-");
+        if (dateParts.length >= 1) {
+            String s = dateParts[0];
+            newDateString.append((s.length() == 1) ? 0 + s : s);
+            newDateString.append("-");
+        }
+        if (dateParts.length >= 2) {
+            String s = dateParts[1];
+            newDateString.append((s.length() == 1) ? 0 + s : s);
+            newDateString.append("-");
+        }
+        if (dateParts.length >= 3) {
+            newDateString.append(dateParts[2]);
+        }
+        return newDateString.toString();
     }
 
-    public String askForState(List<State> validStates) {
-        displayStates(validStates);
+    public String askForName() {
+        String name = "";
+        while ((name = io.readString("Enter Name: ")).isEmpty()) {
+            io.println("name cannot be blank");
+        }
+        return name;
+    }
+
+    public String askForState() {
         return io.readString("Enter State: ");
     }
 
-    public String askForProduct(List<Product> validProducts) {
-        displayProducts(validProducts);
+    public String askForProduct() {
         return io.readString("Enter Product: ");
     }
 
@@ -231,10 +259,10 @@ public class View {
     public int askForOrderNumber() {
         do {
             int input = io.readInt("Enter Order Number: ", 1, Integer.MAX_VALUE);
-            if (input != -1) {
-                return input;
-            } else {
+            if (input == -1) {
                 io.println("Invalid order number");
+            } else {
+                return input;
             }
         } while (true);
     }

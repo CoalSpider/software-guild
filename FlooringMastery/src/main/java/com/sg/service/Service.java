@@ -9,7 +9,6 @@ import com.sg.exceptions.PersistenceException;
 import com.sg.dto.Order;
 import com.sg.dto.Product;
 import com.sg.dto.State;
-import com.sg.exceptions.DeletedOrderException;
 import com.sg.exceptions.AlreadyDeletedException;
 import java.time.LocalDate;
 import java.util.List;

@@ -54,9 +54,9 @@ public class Controller {
                         break;
                 }
             } catch (PersistenceException ex) {
-                displayErrorMsg(ex.getMessage());
+                view.displayErrorMsg(ex.getMessage());
             } catch (AlreadyDeletedException ex) {
-                displayAlreadyDeletedOrderMsg();
+                view.displayAlreadyDeletedOrderMsg();
             }
         } while (true);
     }
@@ -65,15 +65,9 @@ public class Controller {
         view.displayMainMenu();
     }
 
-    private void displayErrorMsg(String errorMsg) {
-        view.displayErrorMsg(errorMsg);
-    }
-
-    private void displayAlreadyDeletedOrderMsg() {
-        view.displayAlreadyDeletedOrderMsg();
-    }
-
-    /** always returns a valid command **/
+    /**
+     * always returns a valid command *
+     */
     private Command getMenuChoice() {
         return view.askForMenuChoice();
     }
@@ -82,17 +76,17 @@ public class Controller {
         do {
             LocalDate date = view.askForDate();
             if (service.isValidDate(date)) {
-                view.displayOrders(service.getOrders(date));
                 return date;
             } else {
-                view.displayInvalidDateMsg();
+                view.displayDateAfterTodayMsg();
             }
         } while (true);
     }
 
     private State getState() throws PersistenceException {
+        view.displayStates(service.getStates());
         do {
-            String stateName = view.askForState(service.getStates());
+            String stateName = view.askForState();
             if (service.isValidState(stateName)) {
                 return service.getState(stateName);
             } else {
@@ -102,8 +96,9 @@ public class Controller {
     }
 
     private Product getProduct() throws PersistenceException {
+        view.displayProducts(service.getProducts());
         do {
-            String productName = view.askForProduct(service.getProducts());
+            String productName = view.askForProduct();
             if (service.isValidProduct(productName)) {
                 return service.getProduct(productName);
             } else {
@@ -157,10 +152,15 @@ public class Controller {
         if (service.getOrders(date).isEmpty()) {
             view.displayNoOrdersForDate();
         } else {
+            view.displayOrders(service.getOrders(date));
             int orderNumber = view.askForOrderNumber();
             Order order = service.getOrder(orderNumber, date);
-            view.editOrder(order, service.getProducts(), service.getStates());
-            view.displayOrder(order);
+            if (order.isDeleted()) {
+                view.displayErrorMsg("Cannot edit canceled orders");
+            } else {
+                view.editOrder(order, service.getProducts(), service.getStates());
+                view.displayOrder(order);
+            }
         }
     }
 
@@ -174,6 +174,7 @@ public class Controller {
         if (service.getOrders(date).isEmpty()) {
             view.displayNoOrdersForDate();
         } else {
+            view.displayOrders(service.getOrders(date));
             int orderNumber = view.askForOrderNumber();
             Order order = service.getOrder(orderNumber, date);
             view.displayOrder(order);

@@ -61,10 +61,10 @@ public class ServiceFileImpl implements Service {
 
     @Override
     public void save() throws PersistenceException {
-        orderDao.saveData();
         if (mode.equalsIgnoreCase("training")) {
             throw new PersistenceException("cannot save in training mode");
         }
+        orderDao.saveData();
     }
 
     @Override

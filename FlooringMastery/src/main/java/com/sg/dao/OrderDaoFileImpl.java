@@ -112,7 +112,7 @@ public class OrderDaoFileImpl implements OrderDao {
         orderBuilder.append(DELIMITER);
         orderBuilder.append(order.getTax().toPlainString());
         orderBuilder.append(DELIMITER);
-        orderBuilder.append(order.isDeleted() ? "0" : order.getTotal().toPlainString());
+        orderBuilder.append(order.getTotal().toPlainString());
         return orderBuilder.toString();
     }
 
@@ -130,7 +130,10 @@ public class OrderDaoFileImpl implements OrderDao {
         }
         String dateAsString = date.format(DATE_FORMAT);
         try (Stream<Path> fileStream = Files.walk(Paths.get(FOLDER_NAME))) {
-            List<File> files = fileStream.map(Path::toFile).filter((file) -> file.getName().contains(dateAsString)).collect(Collectors.toList());
+            List<File> files = fileStream
+                    .map(Path::toFile)
+                    .filter((file) -> file.getName().contains(dateAsString))
+                    .collect(Collectors.toList());
             if (files.isEmpty()) {
                 return null;
             }
@@ -199,7 +202,7 @@ public class OrderDaoFileImpl implements OrderDao {
         BigDecimal materialCost = new BigDecimal(tokens[8]);
         BigDecimal laborCost = new BigDecimal(tokens[9]);
         BigDecimal tax = new BigDecimal(tokens[10]);
-        BigDecimal total = tokens[11].equals("0") ? BigDecimal.ZERO : new BigDecimal(tokens[11]);
+        BigDecimal total = new BigDecimal(tokens[11]);
 
         Order order = new Order();
         order.setOrderNumber(orderNumber);
@@ -236,7 +239,7 @@ public class OrderDaoFileImpl implements OrderDao {
                 if(order.isDeleted()){
                     throw new AlreadyDeletedException("order already deleted");
                 }
-                order.setTotal(BigDecimal.ZERO);
+                order.setDeleted();
             } else {
                 throw new PersistenceException("order does not exist for given date");
             }

@@ -119,7 +119,7 @@ public class ServiceFileImplTest {
             // delete
             service.deleteOrder(expected, testDate);
             // confirm deleted
-            assertEquals(BigDecimal.ZERO, service.getOrder(1, testDate).getTotal());
+            assertTrue(service.getOrder(1, testDate).isDeleted());
         } catch (PersistenceException | AlreadyDeletedException ex) {
             fail(ex.getMessage());
         }
