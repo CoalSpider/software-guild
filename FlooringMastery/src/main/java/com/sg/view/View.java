@@ -22,48 +22,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.sg.view.ConsoleColors.*;
+
 /**
  *
  * @author Ben Norman
  */
 public class View {
 
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
-
-    public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
-    public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
-    public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
-    public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
-    public static final String ANSI_BLUE_BACKGROUND = "\u001B[44m";
-    public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
-    public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
-    public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
-
     private final UserIO io;
+    private static final String CANCELED = "CANCELED";
+    private static final String ACTIVE = "ACTIVE";
 
     public View(UserIO io) {
         this.io = io;
     }
 
     public void displayMainMenu() {
-        io.println(ANSI_WHITE + "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * " + ANSI_RESET);
-        io.println(ANSI_WHITE + "* <<Flooring Program>>");
-        io.println(ANSI_PURPLE + "* 1. Display Orders");
-        io.println(ANSI_BLUE + "* 2. Add an Order");
-        io.println(ANSI_CYAN + "* 3. Edit an Order");
-        io.println(ANSI_GREEN + "* 4. Remmove an Order");
-        io.println(ANSI_YELLOW + "* 5. Save Current Work");
-        io.println(ANSI_RED + "* 6. Quit");
-        io.println(ANSI_WHITE + "*");
-        io.println(ANSI_WHITE + "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ");
+        io.println(WHITE + "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * " + RESET);
+        io.println(WHITE + "* <<Flooring Program>>");
+        io.println(WHITE + "*" + PURPLE + " 1. Display Orders");
+        io.println(WHITE + "*" + BLUE + " 2. Add an Order");
+        io.println(WHITE + "*" + CYAN + " 3. Edit an Order");
+        io.println(WHITE + "*" + GREEN + " 4. Remmove an Order");
+        io.println(WHITE + "*" + YELLOW + " 5. Save Current Work");
+        io.println(WHITE + "*" + RED + " 6. Quit");
+        io.println(WHITE + "*");
+        io.println(WHITE + "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ");
     }
 
     public void displayOrder(Order order) {
@@ -75,9 +60,11 @@ public class View {
     private void displayOrder(AsciiTable orderTable, Order order) {
         State s = order.getState();
         Product p = order.getProduct();
+        String customerName = order.isDeleted() ? order.getCustomerName().replaceAll("\\[" + CANCELED + "\\]", "") : order.getCustomerName();
+        customerName = customerName.replaceAll(" ", "_");
         orderTable.addRow(
                 order.getOrderNumber(),
-                order.isDeleted() ? order.getCustomerName().replaceAll("\\[CANCELED\\]", "") : order.getCustomerName(),
+                customerName,
                 order.getAreaInSquareFeet().toPlainString(),
                 s.getName(),
                 s.getTaxRate() + "%",
@@ -89,7 +76,7 @@ public class View {
                 "$" + order.getTax().toPlainString(),
                 // mark as red for deleted
                 "$" + order.getTotal().toPlainString(),
-                order.isDeleted() ? "[CACELED]" : "[ACTIVE]  ");
+                order.isDeleted() ? "[" + CANCELED + "]" : "[" + ACTIVE + "]  ");
         orderTable.addRule();
     }
 
@@ -114,10 +101,16 @@ public class View {
         for (Order order : orders) {
             displayOrder(orderTable, order);
         }
-        orderTable.getRenderer().setCWC(new CWC_LongestWordMin(3));
-        orderTable.setTextAlignment(TextAlignment.CENTER);
+        orderTable.getRenderer().setCWC(new CWC_LongestWordMin(4));
+        orderTable.setTextAlignment(TextAlignment.RIGHT);
         orderTable.getContext().setGrid(A7_Grids.minusBarPlus());
-        io.println(orderTable.render());
+        String table = orderTable.render();
+        table = table.replaceAll("\\$", YELLOW+"\\$"+RESET);
+        table = table.replaceAll(CANCELED, RED+CANCELED+RESET+"");
+        table = table.replaceAll(ACTIVE, GREEN+ACTIVE+RESET+"");
+        table = table.replaceAll("\\+", WHITE+"\\+");
+        table = table.replaceAll("_", " ");
+        io.println(table);
     }
 
     public void displayPersistenceException(String message) {

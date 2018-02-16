@@ -45,7 +45,6 @@ public class LoggingAdvice {
     }
     
     public void createActionLogEntry(JoinPoint jp) {
-        System.out.println("created action log");
         outputBuilder.append(LocalDateTime.now());
         outputBuilder.append(DELIMITER);
         outputBuilder.append(jp.getSignature().getName());
