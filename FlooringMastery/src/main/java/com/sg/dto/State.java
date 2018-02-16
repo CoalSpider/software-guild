@@ -62,5 +62,9 @@ public class State {
         }
         return true;
     }
-    
+
+    @Override
+    public String toString() {
+        return "State{" + "name=" + name +'}';
+    }
 }

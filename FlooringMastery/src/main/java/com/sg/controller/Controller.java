@@ -127,7 +127,7 @@ public class Controller {
      *                  ADD ORDER COMMAND
      * ================================================================
      */
-    private void addOrder() throws PersistenceException, AlreadyDeletedException {
+    private void addOrder() throws PersistenceException {
         Order order = new Order();
         order.setOrderNumber(service.getOrderNumber(LocalDate.now()));
         order.setCustomerName(view.askForName());
@@ -199,7 +199,7 @@ public class Controller {
      *                  QUIT COMMAND
      * ================================================================
      */
-    private void quit() {
+    public void quit() {
         view.displayGoodbyMessage();
         System.exit(0);
     }

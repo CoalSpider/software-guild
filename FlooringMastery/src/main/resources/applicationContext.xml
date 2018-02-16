@@ -41,4 +41,30 @@
         <constructor-arg ref="view"/>
         <constructor-arg ref="service"/>
     </bean>
+    
+    <bean id="logging" class="com.sg.advice.LoggingAdvice">
+        <constructor-arg value="exceptionLog.txt" />
+        <constructor-arg value="actionLog.txt" />
+    </bean>
+    
+    <aop:config>
+        <aop:aspect ref="logging">
+            <!-- track all errors thrown by service layer -->
+            <aop:after-throwing method="createErrorLogEntry" pointcut="execution(* com.sg.service.ServiceFileImpl.*(..))" throwing="error"/>
+        </aop:aspect>
+        <aop:aspect ref="logging">
+            <!-- start and end of program -->
+            <aop:before method="createActionLogEntry" pointcut="execution(* com.sg.controller.Controller.run(..))"/>
+            <aop:after-returning method="createActionLogEntry" pointcut="execution(* com.sg.view.View.displayGoodbyMessage(..))"/>
+            <!-- track all actions taken by user -->
+            <aop:after-returning method="createActionLogEntry" pointcut="execution(* com.sg.service.ServiceFileImpl.getState(..))"/>
+            <aop:after-returning method="createActionLogEntry" pointcut="execution(* com.sg.service.ServiceFileImpl.getProduct(..))"/>
+            <aop:after-returning method="createActionLogEntry" pointcut="execution(* com.sg.service.ServiceFileImpl.createOrder(..))"/>
+            <aop:after-returning method="createActionLogEntry" pointcut="execution(* com.sg.service.ServiceFileImpl.deleteOrder(..))"/>
+            <aop:after-returning method="createActionLogEntry" pointcut="execution(* com.sg.service.ServiceFileImpl.save(..))"/>
+            <aop:after-returning method="createActionLogEntry" pointcut="execution(* com.sg.service.ServiceFileImpl.getOrder(..))"/>
+            <aop:before method="createActionLogEntry" pointcut="execution(* com.sg.view.View.editOrder(..))"/>
+            <aop:after method="createActionLogEntry" pointcut="execution(* com.sg.view.View.editOrder(..))"/>
+        </aop:aspect>
+    </aop:config>
 </beans>

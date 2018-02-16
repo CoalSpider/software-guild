@@ -222,14 +222,6 @@ public class Order {
                 + customerName
                 + ", areaInSquareFeet="
                 + areaInSquareFeet.toPlainString()
-                + ", materialCost="
-                + materialCost.toPlainString()
-                + ", laborCost="
-                + laborCost.toPlainString()
-                + ", tax="
-                + tax.toPlainString()
-                + ", total="
-                + total.toPlainString()
                 + ", state="
                 + state
                 + ", product="
