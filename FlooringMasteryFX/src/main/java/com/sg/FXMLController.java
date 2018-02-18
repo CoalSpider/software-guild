@@ -26,8 +26,16 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class FXMLController implements Initializable {
+
     // to be injected by spring by setter
     private Service service;
     // fxml controllers
@@ -49,6 +57,10 @@ public class FXMLController implements Initializable {
     private Button save;
     @FXML
     private Button edit;
+    @FXML
+    private Button delete;
+    @FXML
+    private Text title;
 
     @FXML
     private void addOrderAction(ActionEvent event) {
@@ -129,6 +141,8 @@ public class FXMLController implements Initializable {
             edit.setDisable(true);
             // disable add if were not on todays date
             add.setDisable(!getDate().equals(LocalDate.now()));
+            // disbale delete as were not selecting anything
+            delete.setDisable(true);
         } catch (PersistenceException ex) {
             displayErrorAlert(ex.getMessage());
         }
@@ -140,15 +154,18 @@ public class FXMLController implements Initializable {
         save.setDisable(true);
         // disable edit as were not selecting anything
         edit.setDisable(true);
-        // on selction enable edit button
+        // disbale delete as were not selecting anything
+        delete.setDisable(true);
+        // on selction enable edit and delete button
         orderTable.getSelectionModel().getSelectedCells().addListener((ListChangeListener.Change<? extends TablePosition> c) -> {
             edit.setDisable(false);
+            delete.setDisable(false);
         });
         // set the date to today
         datePicker.setValue(LocalDate.now());
         // TODO: inject in setter with spring
         service = new ServiceFileImpl(new OrderDaoFileImpl(), new ProductDaoFileImpl(), new StateDaoFileImpl(), "training");
-        
+
         initAlerts();
         try {
             initAddDialog();
@@ -158,6 +175,8 @@ public class FXMLController implements Initializable {
         } catch (PersistenceException ex) {
             displayErrorAlert("error loading products or states file");
         }
+
+        //initTitleNeon();
     }
 
     private void initAlerts() {
@@ -202,6 +221,51 @@ public class FXMLController implements Initializable {
 
     }
 
+    private void initTitleNeon() {
+        Blend blend = new Blend();
+        blend.setMode(BlendMode.MULTIPLY);
+
+        DropShadow ds = new DropShadow();
+        ds.setColor(Color.rgb(254, 235, 66, 0.3));
+        ds.setOffsetX(5);
+        ds.setOffsetY(5);
+        ds.setRadius(5);
+        ds.setSpread(0.2);
+
+        blend.setBottomInput(ds);
+
+        DropShadow ds1 = new DropShadow();
+        ds1.setColor(Color.web("#f13a00"));
+        ds1.setRadius(20);
+        ds1.setSpread(0.2);
+
+        Blend blend2 = new Blend();
+        blend2.setMode(BlendMode.MULTIPLY);
+
+        InnerShadow is = new InnerShadow();
+        is.setColor(Color.web("#feeb42"));
+        is.setRadius(9);
+        is.setChoke(0.8);
+        blend2.setBottomInput(is);
+
+        InnerShadow is1 = new InnerShadow();
+        is1.setColor(Color.web("#f13a00"));
+        is1.setRadius(5);
+        is1.setChoke(0.4);
+        blend2.setTopInput(is1);
+
+        Blend blend1 = new Blend();
+        blend1.setMode(BlendMode.MULTIPLY);
+        blend1.setBottomInput(ds1);
+        blend1.setTopInput(blend2);
+
+        blend.setTopInput(blend1);
+
+        title.setEffect(blend);
+        title.setFill(Color.WHITE);
+        title.setFont(Font.font("Impact", 50));
+    }
+    
     // TODO injected by spring
     public void setService(Service service) {
         this.service = service;
@@ -211,7 +275,7 @@ public class FXMLController implements Initializable {
         errorMsg.setHeaderText("Error: " + msg);
         errorMsg.showAndWait();
     }
-    
+
     private void displayWarning(String msg) {
         warning.setHeaderText(msg);
         warning.showAndWait();

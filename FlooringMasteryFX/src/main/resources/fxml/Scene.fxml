@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="1080.0" maxWidth="1920.0" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sg.FXMLController">
+<BorderPane maxHeight="1080.0" maxWidth="1920.0" prefHeight="750.0" prefWidth="1200.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sg.FXMLController">
     <center>
-        <TableView fx:id="orderTable" maxHeight="5000.0" maxWidth="5000.0" minHeight="500.0" minWidth="500.0" BorderPane.alignment="CENTER">
+        <TableView fx:id="orderTable" maxHeight="5000.0" maxWidth="5000.0" minHeight="500.0" minWidth="500.0" stylesheets="@../styles/Styles.css" BorderPane.alignment="CENTER">
             <columns>
                 <TableColumn editable="false" prefWidth="-1.0" text="#">
                     <cellValueFactory>
@@ -95,6 +99,12 @@
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
             </columnResizePolicy>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" />
+            </BorderPane.margin>
         </TableView>
     </center>
     <bottom>
@@ -104,15 +114,28 @@
                 <Button fx:id="edit" mnemonicParsing="false" onAction="#editOrderAction" text="Edit" />
                 <Button fx:id="delete" layoutX="571.0" layoutY="15.0" mnemonicParsing="false" onAction="#deleteOrderAction" text="Delete" />
                 <Button fx:id="add" layoutX="571.0" layoutY="15.0" mnemonicParsing="false" onAction="#addOrderAction" text="Add" />
-                <Button fx:id="save" layoutX="571.0" layoutY="15.0" mnemonicParsing="false" onAction="#saveAction" text="Save" />
+                <Button fx:id="save" layoutX="571.0" layoutY="15.0" mnemonicParsing="false" onAction="#saveAction" text="Save"/>
             </buttons>
         </ButtonBar>
     </bottom>
     <top>
-        <Label text="===== Flooring Mastery =====" BorderPane.alignment="CENTER">
+        <Text id="fancyTitle" fx:id="title" text="FlooringMastery" BorderPane.alignment="CENTER">
             <font>
-                <Font size="30.0" />
+                <Font name="Impact" size="50.0" />
             </font>
-        </Label>
+            <effect>
+                <Lighting diffuseConstant="2.0" specularConstant="1.98" specularExponent="14.15" surfaceScale="5.28">
+                    <bumpInput>
+                        <Shadow radius="7.25" width="10.0" />
+                    </bumpInput>
+                    <light>
+                        <Light.Distant azimuth="172.32" color="#ffb500" elevation="159.15" />
+                    </light>
+                </Lighting>
+            </effect>
+        </Text>
     </top>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" />
+    </padding>
 </BorderPane>

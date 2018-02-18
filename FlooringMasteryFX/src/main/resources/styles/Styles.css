@@ -1,3 +1,149 @@
-.button {
+/*.button {
     -fx-font-weight: bold;
+}*/
+.root{
+    -fx-background-image:url("flooring_background.png");
+}
+
+.button{
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+}
+
+.button .text{
+    -fx-fill: #ffd300;
+}
+
+.date-picker{
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+}
+
+.date-picker .date-picker-display-node:readonly{
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+    -fx-text-fill:#ffd300;
+    -fx-prompt-text-fill:#ffd300;
+}
+
+
+.date-picker .arrow-button{
+    -fx-background-color: linear-gradient(#131313 0%, #ffd300 100%);
+}
+
+.date-picker .arrow-button .arrow{
+    -fx-color:red;
+}
+
+.date-picker-popup > .month-year-pane {
+    -fx-padding: 0.588883em 0.5em 0.666667em 0.5em; /* 7 6 8 6 */
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+    -fx-background-insets: 0 0 0 0, 0 0 1 0;
+    -fx-text-fill: white;
+}
+
+.date-picker-popup > * > .spinner > .label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #ffd300;
+
+}
+.date-picker-popup > * > .day-name-cell,
+.date-picker-popup > * > .week-number-cell {
+    -fx-font-size: 0.916667em;
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+    -fx-text-fill: #ffd300;
+}
+
+.date-picker-popup > * > .day-cell {
+    -fx-padding: 0.333333em 0.583333em 0.333333em 0.583333em; /* 4 7 4 7 */
+    -fx-border-color: derive(-fx-selection-bar-non-focused, 60%);
+    -fx-border-width: 1px;
+    -fx-font-size: 1em;
+    -fx-background: -fx-control-inner-background;
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);/*fx-background;*/
+    -fx-text-fill: #ffd300
+
+}
+.date-picker-popup > * > .day-cell:focused:hover,
+.date-picker-popup > * > .today:focused:hover,
+.date-picker-popup > * > .selected:focused,
+.date-picker-popup > * > .today.selected:focused {
+    -fx-background-color: #ffd300;
+    -fx-text-fill: black;
+}
+
+.date-picker-popup > * > .day-cell:hover,
+.date-picker-popup > * > .today:hover,
+.date-picker-popup > * > .selected:hover {
+    -fx-background-color: #ffd300;
+    -fx-text-fill: black;
+
+}
+
+.table-view:row-selection:constrained-resize .column-header-background .nested-column-header .table-column .label .text{
+    -fx-fill:#ffd300
+}
+
+.table-view{
+    -fx-background-color: rgba(0,0,0,0.5);
+}
+
+.table-view:focused{
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background{
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+}
+
+.table-view .column-header-background .label{
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffd300;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: #ffd300;
+    -fx-border-width: 0px 1px 0px 0px;
+    -fx-border-style: solid;
+}
+
+.table-view .table-cell{
+    -fx-text-fill: white;
+    -fx-font: 18px "Ariel";
+    -fx-stroke: white;
+    -fx-stroke-width: 2;
+}
+
+.table-row-cell{
+    -fx-table-cell-border-color: rgb(0,0,0);
+    -fx-background-color: rgba(97,97,97, 0.9);
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em; /* 0 */
+}
+
+.table-row-cell:odd{
+    -fx-table-cell-border-color:rgb(0,0,0);
+    -fx-background-color: rgba(66,66,66, 0.9);
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em; /* 0 */  
+}
+
+.table-row-cell:selected {
+    -fx-background-color: rgba(0,0,0,0.5)/*#005797*/;
+    -fx-background-insets: 0;
+    -fx-background-radius: 1;
+}
+
+.table-view > .virtual-flow > .scroll-bar:vertical,
+.table-view > .virtual-flow > .scroll-bar:vertical > .track,
+.table-view > .virtual-flow > .scroll-bar:vertical > .track-background, 
+.table-view > .virtual-flow > .scroll-bar:horizontal,
+.table-view > .virtual-flow > .scroll-bar:horizontal > .track,
+.table-view > .virtual-flow > .scroll-bar:horizontal > .track-background {
+    -fx-background-color: transparent;
+}
+
+
+
+.table-view > .virtual-flow > .scroll-bar > .increment-button, 
+.table-view > .virtual-flow > .scroll-bar > .decrement-button {
+    -fx-opacity: 0;
 }
