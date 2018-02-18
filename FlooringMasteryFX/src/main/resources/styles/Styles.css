@@ -13,6 +13,11 @@
     -fx-fill: #ffd300;
 }
 
+/* 
+* =========================================================
+*                     DATE PICKER
+* ==========================================================
+*/
 .date-picker{
     -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
 }
@@ -59,8 +64,8 @@
     -fx-background: -fx-control-inner-background;
     -fx-background-color: linear-gradient(#131313 0%, #424141 100%);/*fx-background;*/
     -fx-text-fill: #ffd300
-
 }
+
 .date-picker-popup > * > .day-cell:focused:hover,
 .date-picker-popup > * > .today:focused:hover,
 .date-picker-popup > * > .selected:focused,
@@ -74,9 +79,20 @@
 .date-picker-popup > * > .selected:hover {
     -fx-background-color: #ffd300;
     -fx-text-fill: black;
-
 }
 
+.date-picker-popup > * > .next-month{
+    -fx-text-fill:red;
+}
+
+.date-picker-popup > * > .today {
+    -fx-text-fill:blue;
+}
+/* 
+* =========================================================
+*                     TABLE VEIW
+* ==========================================================
+*/
 .table-view:row-selection:constrained-resize .column-header-background .nested-column-header .table-column .label .text{
     -fx-fill:#ffd300
 }
@@ -137,7 +153,7 @@
 .table-view > .virtual-flow > .scroll-bar:vertical > .track-background, 
 .table-view > .virtual-flow > .scroll-bar:horizontal,
 .table-view > .virtual-flow > .scroll-bar:horizontal > .track,
-.table-view > .virtual-flow > .scroll-bar:horizontal > .track-background {
+.table-view > .virtual-flow > .scroll-bar:horizontal > z.track-background {
     -fx-background-color: transparent;
 }
 
@@ -146,4 +162,44 @@
 .table-view > .virtual-flow > .scroll-bar > .increment-button, 
 .table-view > .virtual-flow > .scroll-bar > .decrement-button {
     -fx-opacity: 0;
+}
+
+/* 
+* =========================================================
+*                     DIALOGDS
+* ==========================================================
+*/
+
+.dialog-pane .content,
+.dialog-pane .header,
+dialog-pane .graphic{
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+}
+
+.text-field{
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+    -fx-border-color: #ffd300;
+    -fx-text-fill: white;
+}
+
+.choice-box{
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+    -fx-border-color: #ffd300;
+    -fx-text-fill: white;
+}
+.choice-box .label{
+    -fx-text-fill: white;
+}
+
+.choice-box .context-menu { 
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+}
+.choice-box .menu-item:focused { 
+    -fx-background-color: #ffd300;
+}
+.choice-box .menu-item > .label { 
+    -fx-text-fill: white; 
+}
+.choice-box .menu-item:focused > .label { 
+    -fx-text-fill: black; 
 }

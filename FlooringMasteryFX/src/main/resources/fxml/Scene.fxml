@@ -114,7 +114,7 @@
                 <Button fx:id="edit" mnemonicParsing="false" onAction="#editOrderAction" text="Edit" />
                 <Button fx:id="delete" layoutX="571.0" layoutY="15.0" mnemonicParsing="false" onAction="#deleteOrderAction" text="Delete" />
                 <Button fx:id="add" layoutX="571.0" layoutY="15.0" mnemonicParsing="false" onAction="#addOrderAction" text="Add" />
-                <Button fx:id="save" layoutX="571.0" layoutY="15.0" mnemonicParsing="false" onAction="#saveAction" text="Save"/>
+                <Button fx:id="save" layoutX="571.0" layoutY="15.0" mnemonicParsing="false" onAction="#saveAction" text="Save" />
             </buttons>
         </ButtonBar>
     </bottom>

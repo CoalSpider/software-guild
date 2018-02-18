@@ -19,20 +19,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.InnerShadow;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.util.Callback;
 
 public class FXMLController implements Initializable {
 
@@ -41,12 +37,15 @@ public class FXMLController implements Initializable {
     // fxml controllers
     private EditDialogController editController;
     private AddDialogController addController;
+    private WarningDialogController warningController;
+    private ConfirmDialogController confirmController;
     // user action dialogs and alerts
     private Dialog<Order> addOrderDialog;
     private Dialog<Order> editOrderDialog;
+
     private Alert warning;
-    private Alert errorMsg;
     private Alert confirmDelete;
+
     @FXML
     private DatePicker datePicker;
     @FXML
@@ -59,8 +58,6 @@ public class FXMLController implements Initializable {
     private Button edit;
     @FXML
     private Button delete;
-    @FXML
-    private Text title;
 
     @FXML
     private void addOrderAction(ActionEvent event) {
@@ -161,13 +158,12 @@ public class FXMLController implements Initializable {
             edit.setDisable(false);
             delete.setDisable(false);
         });
-        // set the date to today
-        datePicker.setValue(LocalDate.now());
         // TODO: inject in setter with spring
         service = new ServiceFileImpl(new OrderDaoFileImpl(), new ProductDaoFileImpl(), new StateDaoFileImpl(), "training");
 
-        initAlerts();
         try {
+            initConfirmDialog();
+            initWarningDialog();
             initAddDialog();
             initEditDialog();
         } catch (IOException ex) {
@@ -176,14 +172,53 @@ public class FXMLController implements Initializable {
             displayErrorAlert("error loading products or states file");
         }
 
-        //initTitleNeon();
+        // set the date to today
+        datePicker.setValue(LocalDate.now());
+        // some custom behavior we want to only enable dates with orders as were not allowed to create orders in the past or future (only today)
+        Callback<DatePicker, DateCell> dayCellFactory = (final DatePicker datePicker1) -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+
+                // diable dates after today
+                if (item.isAfter(LocalDate.now())) {
+                    setDisable(true);
+                } else {
+                    try {
+                        // diable dates with no orders unless its today
+                        if (service.getOrders(item).isEmpty() && !item.equals(LocalDate.now())) {
+                            setDisable(true);
+                        }
+                    } catch (PersistenceException e) {
+                        warningController.setText("Error getting orders for date " + item + " msg: " + e.getMessage());
+                        warning.showAndWait();
+                    }
+                }
+
+            }
+        };
+        datePicker.setDayCellFactory(dayCellFactory);
     }
 
-    private void initAlerts() {
-        warning = new Alert(Alert.AlertType.WARNING);
-        errorMsg = new Alert(Alert.AlertType.ERROR);
-        confirmDelete = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmDelete.setHeaderText("You sure? Delete Order?");
+    private void initConfirmDialog() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ConfirmDialog.fxml"));
+        DialogPane confirmPane = loader.load();
+        confirmController = loader.getController();
+
+        confirmDelete = new Alert(AlertType.CONFIRMATION);
+        confirmDelete.setDialogPane(confirmPane);
+        confirmDelete.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        confirmController.setText("You sure? Delete Order?");
+    }
+
+    private void initWarningDialog() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ErrorDialog.fxml"));
+        DialogPane warningPane = loader.load();
+        warningController = loader.getController();
+
+        warning = new Alert(AlertType.WARNING);
+        warning.setDialogPane(warningPane);
+        warning.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
     }
 
     private void initAddDialog() throws IOException, PersistenceException {
@@ -218,66 +253,20 @@ public class FXMLController implements Initializable {
         editOrderDialog.getDialogPane().getButtonTypes().addAll(ButtonType.FINISH, ButtonType.CLOSE);
         // set converter
         editController.setResultConverter(editOrderDialog);
-
     }
 
-    private void initTitleNeon() {
-        Blend blend = new Blend();
-        blend.setMode(BlendMode.MULTIPLY);
-
-        DropShadow ds = new DropShadow();
-        ds.setColor(Color.rgb(254, 235, 66, 0.3));
-        ds.setOffsetX(5);
-        ds.setOffsetY(5);
-        ds.setRadius(5);
-        ds.setSpread(0.2);
-
-        blend.setBottomInput(ds);
-
-        DropShadow ds1 = new DropShadow();
-        ds1.setColor(Color.web("#f13a00"));
-        ds1.setRadius(20);
-        ds1.setSpread(0.2);
-
-        Blend blend2 = new Blend();
-        blend2.setMode(BlendMode.MULTIPLY);
-
-        InnerShadow is = new InnerShadow();
-        is.setColor(Color.web("#feeb42"));
-        is.setRadius(9);
-        is.setChoke(0.8);
-        blend2.setBottomInput(is);
-
-        InnerShadow is1 = new InnerShadow();
-        is1.setColor(Color.web("#f13a00"));
-        is1.setRadius(5);
-        is1.setChoke(0.4);
-        blend2.setTopInput(is1);
-
-        Blend blend1 = new Blend();
-        blend1.setMode(BlendMode.MULTIPLY);
-        blend1.setBottomInput(ds1);
-        blend1.setTopInput(blend2);
-
-        blend.setTopInput(blend1);
-
-        title.setEffect(blend);
-        title.setFill(Color.WHITE);
-        title.setFont(Font.font("Impact", 50));
-    }
-    
-    // TODO injected by spring
+    // TODO injecte withspring
     public void setService(Service service) {
         this.service = service;
     }
 
     private void displayErrorAlert(String msg) {
-        errorMsg.setHeaderText("Error: " + msg);
-        errorMsg.showAndWait();
+        warningController.setText("Error: " + msg);
+        warning.showAndWait();
     }
 
     private void displayWarning(String msg) {
-        warning.setHeaderText(msg);
+        warningController.setText(msg);
         warning.showAndWait();
     }
 

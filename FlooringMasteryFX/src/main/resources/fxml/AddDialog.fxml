@@ -4,14 +4,18 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<DialogPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sg.AddDialogController">
+<DialogPane prefHeight="165.0" prefWidth="352.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sg.AddDialogController">
     <content>
-        <GridPane maxWidth="5000.0">
+        <GridPane maxWidth="5000.0" vgap="25.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -25,27 +29,79 @@
             <children>
                 <ChoiceBox fx:id="stateChoices" maxWidth="5000.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
                 <ChoiceBox fx:id="productChoices" maxWidth="5000.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                <TextField fx:id="name" maxWidth="5000.0" GridPane.columnIndex="1" />
-                <TextField fx:id="area" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name" GridPane.halignment="RIGHT">
+                <TextField fx:id="name" maxWidth="5000.0" promptText="enter name" GridPane.columnIndex="1" />
+                <TextField fx:id="area" promptText="enter area" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Text text="Name" GridPane.halignment="RIGHT">
                     <GridPane.margin>
                         <Insets right="20.0" />
                     </GridPane.margin>
+                    <font>
+                        <Font name="Arial" size="24.0" />
+                    </font>
+                    <effect>
+                        <Lighting diffuseConstant="0.0" specularConstant="2.0" specularExponent="0.98" surfaceScale="5.98">
+                            <bumpInput>
+                                <Shadow height="15.5" radius="5.875" width="10.0" />
+                            </bumpInput>
+                            <light>
+                                <Light.Distant azimuth="172.32" color="#ffb200" elevation="159.15" />
+                            </light>
+                        </Lighting>
+                    </effect>
                 </Text>
-                <Text layoutX="10.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="State" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                <Text layoutX="10.0" layoutY="31.0" text="State" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets right="20.0" />
                     </GridPane.margin>
+                    <font>
+                        <Font name="Arial" size="24.0" />
+                    </font>
+                    <effect>
+                        <Lighting diffuseConstant="0.0" specularConstant="2.0" specularExponent="0.98" surfaceScale="5.98">
+                            <bumpInput>
+                                <Shadow height="15.5" radius="5.875" width="10.0" />
+                            </bumpInput>
+                            <light>
+                                <Light.Distant azimuth="172.32" color="#ffb200" elevation="159.15" />
+                            </light>
+                        </Lighting>
+                    </effect>
                 </Text>
-                <Text layoutX="10.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Area FT^2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                <Text layoutX="10.0" layoutY="61.0" text="Area FT^2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                     <GridPane.margin>
                         <Insets right="20.0" />
                     </GridPane.margin>
+                    <font>
+                        <Font name="Arial" size="24.0" />
+                    </font>
+                    <effect>
+                        <Lighting diffuseConstant="0.0" specularConstant="2.0" specularExponent="0.98" surfaceScale="5.98">
+                            <bumpInput>
+                                <Shadow height="15.5" radius="5.875" width="10.0" />
+                            </bumpInput>
+                            <light>
+                                <Light.Distant azimuth="172.32" color="#ffb200" elevation="159.15" />
+                            </light>
+                        </Lighting>
+                    </effect>
                 </Text>
-                <Text layoutX="10.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Product" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                <Text layoutX="10.0" layoutY="91.0" text="Product" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                     <GridPane.margin>
                         <Insets right="20.0" />
                     </GridPane.margin>
+                    <font>
+                        <Font name="Arial" size="24.0" />
+                    </font>
+                    <effect>
+                        <Lighting diffuseConstant="0.0" specularConstant="2.0" specularExponent="0.98" surfaceScale="5.98">
+                            <bumpInput>
+                                <Shadow height="15.5" radius="5.875" width="10.0" />
+                            </bumpInput>
+                            <light>
+                                <Light.Distant azimuth="172.32" color="#ffb200" elevation="159.15" />
+                            </light>
+                        </Lighting>
+                    </effect>
                 </Text>
             </children>
         </GridPane>
