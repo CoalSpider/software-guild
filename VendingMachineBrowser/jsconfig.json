@@ -1,0 +1,15 @@
+{
+
+    "typeAcquisition": {
+
+        "include": [
+
+            "jquery",
+
+            "bootstrap"
+
+        ]
+
+    }
+
+}

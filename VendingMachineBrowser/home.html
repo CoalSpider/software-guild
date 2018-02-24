@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Vending Machine</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-grid.min.css">
+
+    <style>
+        /* body{
+            text-align: center;
+            width: 96%;
+            margin: 0 auto;
+        } */
+        h3,
+        h1 {
+            text-align: center;
+        }
+
+        hr {
+            border: 1px solid black;
+        }
+        .item{
+            border: 1px solid green;
+            margin: 2em;
+            /* 200px - 32px */
+            min-width: calc(200px - 32px);
+            /* max-width: calc(200px - 32px); */
+            max-width: 30%;
+        }
+        .itemPart{
+            display: block;
+            padding: .4em;
+            text-align: center;
+        }
+        .itemNum{
+            text-align: left;
+        }
+        .itemQuantity{
+            margin-top: 1em;
+        }
+        .a{
+            min-width: 70%;
+            max-width: 70%;
+        }
+        .b{
+            min-width: 30%;
+            max-width: 30%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Vending Machine</h1>
+        <hr />
+        <div class="row">
+            <div class="col-9 a" id="itemPannel">
+                <!-- Item rows will be generated on the fly by javascript -->
+                <!-- 3 should be the number of items in a row, no more, no less -->
+                <!-- We will generate a complex statement 
+                    <div class="col item">
+                        <div class="row itemPart itemNum">1</div>
+                        <div class="row itemPart">Snickers</div>
+                        <div class="row itemPart">$1.85</div>
+                        <div class="row itemPart itemQuantity">Qyantify Left: 9</div>
+                    </div> -->
+                <div class="row" id="itemRow">
+                   <!-- generated item go here -->
+                </div>
+            </div>
+
+            <div class="col-3 b" id="inputPannel">
+                <div class="pannel">
+                    <h3>Total $ In</h3>
+                    <div class="row">
+                        <input id="moneyInput" type="text" placeholder="$0.00" readonly />
+                    </div>
+                    <div class="row">
+                        <button class="col" id="addDollar">Add Dollar</button>
+                        <button class="col" id="addQuarter">Add Quater</button>
+                    </div>
+                    <div class="row">
+                        <button class="col" id="addDime">Add Dime</button>
+                        <button class="col" id="addNickle">Add Nickle</button>
+                    </div>
+                </div>
+                <hr />
+                <div class="pannel">
+                    <h3>Messages</h3>
+                    <div class="row">
+                        <input id="messageInput" type="text" readonly>
+                    </div>
+                    <div class="row">
+                        <label id="item">Item:</label>
+                        <input type="text" id="itemChoice" readonly/>
+                    </div>
+                    <div class="row">
+                        <button id="makePurchase">Make Purchase</button>
+                    </div>
+                </div>
+                <hr />
+                <div class="pannel">
+                    <h3>Change</h3>
+                    <div class="row">
+                        <input id="changeInput" type="text" readonly>
+                    </div>
+                    <div class="row">
+                        <button id="changeReturn">Change Return</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jquery -->
+    <script src="js/jquery-3.0.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/secret.js"></script>
+</body>
+
+</html>
