@@ -28,7 +28,7 @@
         <constructor-arg ref="productDao"/>
         <constructor-arg ref="stateDao"/>
         <!-- 4th arg is the mode either production or training (Case insensitive) -->
-        <constructor-arg value="training"/>
+        <constructor-arg value="production"/>
     </bean>
     
     <bean id="io" class="com.sg.view.UserIOConsoleImpl"/>

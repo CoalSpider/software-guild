@@ -174,7 +174,7 @@ public class FXMLController implements Initializable {
 
         // set the date to today
         datePicker.setValue(LocalDate.now());
-        // some custom behavior we want to only enable dates with orders as were not allowed to create orders in the past or future (only today)
+        // some custom behavior we want to only enable dates with orders as were not allowed to create orders in the past or future (only today)5
         Callback<DatePicker, DateCell> dayCellFactory = (final DatePicker datePicker1) -> new DateCell() {
             @Override
             public void updateItem(LocalDate item, boolean empty) {

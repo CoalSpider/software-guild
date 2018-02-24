@@ -1,0 +1,21 @@
+2018-02-19T16:55:09.196::run::
+2018-02-19T16:55:45.538::displayGoodbyMessage::
+2018-02-20T11:18:31.609::run::
+2018-02-20T11:20:45.915::run::
+2018-02-20T11:21:05.526::getState::OH::
+2018-02-20T11:21:14.980::getProduct::Wood::
+2018-02-20T11:21:37.911::createOrder::Order{orderNumber=1, customerName=Ben, areaInSquareFeet=100.12, state=State{name=OH}, product=Product{type=Wood}}::
+2018-02-20T11:21:47.456::save::
+2018-02-20T11:22:39.412::getOrder::1::2018-02-20::
+2018-02-20T11:22:39.413::editOrder::Order{orderNumber=1, customerName=Ben, areaInSquareFeet=100.12, state=State{name=OH}, product=Product{type=Wood}}::[Product{type=Carpet}, Product{type=Laminate}, Product{type=Tile}, Product{type=Wood}]::[State{name=OH}, State{name=PA}, State{name=MI}, State{name=IN}]::
+2018-02-20T11:22:54.517::editOrder::Order{orderNumber=1, customerName=Ben, areaInSquareFeet=100.12, state=State{name=OH}, product=Product{type=Carpet}}::[Product{type=Carpet}, Product{type=Laminate}, Product{type=Tile}, Product{type=Wood}]::[State{name=OH}, State{name=PA}, State{name=MI}, State{name=IN}]::
+2018-02-20T11:23:12.035::save::
+2018-02-20T11:23:51.866::getState::IN::
+2018-02-20T11:23:54.184::getProduct::Tile::
+2018-02-20T11:24:00.987::createOrder::Order{orderNumber=2, customerName=Dan, areaInSquareFeet=9.00, state=State{name=IN}, product=Product{type=Tile}}::
+2018-02-20T11:24:03.420::save::
+2018-02-20T11:24:22.021::getOrder::1::2018-02-20::
+2018-02-20T11:24:24.775::deleteOrder::Order{orderNumber=1, customerName=[CANCELED]Ben, areaInSquareFeet=100.12, state=State{name=OH}, product=Product{type=Carpet}}::2018-02-20::
+2018-02-20T11:24:48.840::save::
+2018-02-20T11:25:27.967::displayGoodbyMessage::
+2018-02-20T11:25:32.230::displayGoodbyMessage::
