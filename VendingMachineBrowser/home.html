@@ -4,16 +4,11 @@
 <head>
     <meta charset="utf-8" />
     <title>Vending Machine</title>
-    <!-- Latest compiled and minified CSS -->
+
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-grid.min.css">
 
     <style>
-        /* body{
-            text-align: center;
-            width: 96%;
-            margin: 0 auto;
-        } */
         h3,
         h1 {
             text-align: center;
@@ -22,32 +17,40 @@
         hr {
             border: 1px solid black;
         }
-        .item{
-            border: 1px solid green;
+
+        .item {
+            background-color: white;
+            border: 1px solid black;
             margin: 2em;
-            /* 200px - 32px */
             min-width: calc(200px - 32px);
-            /* max-width: calc(200px - 32px); */
             max-width: 30%;
         }
-        .itemPart{
+
+        .itemPart {
             display: block;
             padding: .4em;
             text-align: center;
         }
-        .itemNum{
+
+        .itemNum {
             text-align: left;
         }
-        .itemQuantity{
+
+        .itemQuantity {
             margin-top: 1em;
         }
-        .a{
-            min-width: 70%;
-            max-width: 70%;
+
+        input {
+            text-align: center;
         }
-        .b{
-            min-width: 30%;
-            max-width: 30%;
+
+        input,
+        button {
+            width: 90%;
+            margin: 0 auto;
+            padding: .2em;
+            display: block;
+            text-align: center;
         }
     </style>
 </head>
@@ -57,7 +60,7 @@
         <h1>Vending Machine</h1>
         <hr />
         <div class="row">
-            <div class="col-9 a" id="itemPannel">
+            <div class="col-9" id="itemPannel">
                 <!-- Item rows will be generated on the fly by javascript -->
                 <!-- 3 should be the number of items in a row, no more, no less -->
                 <!-- We will generate a complex statement 
@@ -68,23 +71,31 @@
                         <div class="row itemPart itemQuantity">Qyantify Left: 9</div>
                     </div> -->
                 <div class="row" id="itemRow">
-                   <!-- generated item go here -->
+                    <!-- generated item go here -->
                 </div>
             </div>
 
-            <div class="col-3 b" id="inputPannel">
+            <div class="col-3" id="inputPannel">
                 <div class="pannel">
                     <h3>Total $ In</h3>
                     <div class="row">
-                        <input id="moneyInput" type="text" placeholder="$0.00" readonly />
+                        <input id="moneyInput" type="text" placeholder="0.00" readonly />
                     </div>
                     <div class="row">
-                        <button class="col" id="addDollar">Add Dollar</button>
-                        <button class="col" id="addQuarter">Add Quater</button>
+                        <div class="col">
+                            <button id="addDollar">Add Dollar</button>
+                        </div>
+                        <div class="col">
+                            <button id="addQuarter">Add Quater</button>
+                        </div>
                     </div>
                     <div class="row">
-                        <button class="col" id="addDime">Add Dime</button>
-                        <button class="col" id="addNickle">Add Nickle</button>
+                        <div class="col">
+                            <button id="addDime">Add Dime</button>
+                        </div>
+                        <div class="col">
+                            <button id="addNickle">Add Nickle</button>
+                        </div>
                     </div>
                 </div>
                 <hr />
@@ -94,8 +105,12 @@
                         <input id="messageInput" type="text" readonly>
                     </div>
                     <div class="row">
-                        <label id="item">Item:</label>
-                        <input type="text" id="itemChoice" readonly/>
+                        <div class="col-4">
+                            <label id="item">Item:</label>
+                        </div>
+                        <div class="col-8">
+                            <input type="text" id="itemChoice" readonly/>
+                        </div>
                     </div>
                     <div class="row">
                         <button id="makePurchase">Make Purchase</button>

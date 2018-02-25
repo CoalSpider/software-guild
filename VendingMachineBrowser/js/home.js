@@ -10,7 +10,7 @@ $(document).ready(function () {
     var moneyInput = $("#moneyInput");
     function addMoney(amount) {
         moneyInMachine += amount;
-        moneyInput.val("$" + moneyInMachine.toFixed(2));
+        moneyInput.val(moneyInMachine.toFixed(2));
     }
     $("#addDollar").click(function () {
         addMoney(DOLLAR);
