@@ -22,11 +22,12 @@ import org.springframework.stereotype.Component;
  *
  * @author Ben Norman
  */
+@Component
 public class DaoFileImpl implements Dao {
     
     private Map<String, VendableItem> inventory;
     
-    private static final String FILE_NAME = "itemData.txt";
+    private final String FILE_NAME = "inventory.txt";
     private static final String DELIMITER = "::";
     
     private void writeFile() throws PersistanceException {
