@@ -27,7 +27,7 @@ public class ServiceFileImpl implements Service {
     @Override
     public VendableItem getItem(String name) throws PersistanceException, NoItemInventoryException {
         VendableItem item = dao.getItem(name);
-        if (item != null && item.getCount() == 0) {
+        if (item != null && item.getQuantity() == 0) {
             throw new NoItemInventoryException();
         }
         return item;
@@ -50,7 +50,7 @@ public class ServiceFileImpl implements Service {
     public List<VendableItem> getAllItemsInStock() throws PersistanceException {
         return dao.getAllItems()
                 .stream()
-                .filter((item) -> item.getCount() > 0)
+                .filter((item) -> item.getQuantity() > 0)
                 .collect(Collectors.toList());
     }
 
@@ -58,7 +58,7 @@ public class ServiceFileImpl implements Service {
     public List<VendableItem> getAllItemsOutOfStock() throws PersistanceException {
         return dao.getAllItems()
                 .stream()
-                .filter((item) -> item.getCount() <= 0)
+                .filter((item) -> item.getQuantity() <= 0)
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +67,7 @@ public class ServiceFileImpl implements Service {
         if (item.getPrice().compareTo(amountInMachine) > 0) {
             throw new InsufficentFundsException("Insufficent Funds");
         }
-        setCount(item.getName(),item.getCount()-1);
+        setCount(item.getName(),item.getQuantity()-1);
         return amountInMachine.subtract(item.getPrice());
     }
 

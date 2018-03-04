@@ -12,31 +12,54 @@ import java.math.BigDecimal;
  * @author Ben Norman
  */
 public class VendableItem {
-    private final String name;
-    private final BigDecimal price;
-    private int count;
-
-    public VendableItem(String name, BigDecimal price, int count) {
+    private int num;
+    private String name;
+    private BigDecimal price;
+    private int quantity;
+    
+    public VendableItem(){
+        this.num = -1;
+        this.name = "";
+        this.price = BigDecimal.ZERO;
+        this.quantity = 0;
+    }
+    
+    public VendableItem(int num, String name, BigDecimal price, int quantity) {
+        this.num = num;
         this.name = name;
         this.price = price;
-        this.count = count;
+        this.quantity = quantity;
     }
 
-    public int getCount() {
-        return count;
+    public int getNum() {
+        return num;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setNum(int num) {
+        this.num = num;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
-    
-    
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }
