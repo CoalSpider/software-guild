@@ -69,8 +69,7 @@ public class DaoFileImpl implements Dao {
         } else {
             inventory = new TreeMap<>();
         }
-  
-        
+
         try (Scanner sc = new Scanner(res.getFile())) {
             while (sc.hasNext()) {
 
@@ -89,26 +88,32 @@ public class DaoFileImpl implements Dao {
             if (getAllItems().isEmpty()) {
                 createDefaultItemSet();
             }
-        } catch(FileNotFoundException fne){
+        } catch (FileNotFoundException fne) {
             throw new PersistanceException("could not find file " + res.getFilename());
-        }catch(IOException io){
+        } catch (IOException io) {
             throw new PersistanceException("io exception " + res);
         }
     }
 
     private void createDefaultItemSet() throws PersistanceException {
-        VendableItem snickers = new VendableItem(1, "Snickers", new BigDecimal("1.25"), 10);
-        VendableItem MtnDew = new VendableItem(2, "Mtn Dew", new BigDecimal("1.75"), 3);
-        VendableItem cookie = new VendableItem(3, "Skittles", new BigDecimal("0.25"), 10);
-        VendableItem MnMs = new VendableItem(4, "MnMs", new BigDecimal("1.00"), 1);
-        VendableItem doritoes = new VendableItem(5, "Bag of Doritos", new BigDecimal("0.75"), 25);
-        VendableItem solidGoldWatch = new VendableItem(6, "Solid Gold Watch", new BigDecimal("2000.00"), 0);
-        inventory.put(snickers.getName(), snickers);
-        inventory.put(MtnDew.getName(), MtnDew);
-        inventory.put(cookie.getName(), cookie);
-        inventory.put(MnMs.getName(), MnMs);
-        inventory.put(doritoes.getName(), doritoes);
-        inventory.put(solidGoldWatch.getName(), solidGoldWatch);
+        VendableItem a = new VendableItem(1, "Honey", new BigDecimal("1.25"), 10);
+        VendableItem b = new VendableItem(2, "Potion", new BigDecimal("1.75"), 10);
+        VendableItem c = new VendableItem(3, "Herb", new BigDecimal("0.25"), 10);
+        VendableItem d = new VendableItem(4, "Book of Combos 1", new BigDecimal("10.00"), 1);
+        VendableItem e = new VendableItem(5, "Paintball", new BigDecimal("0.75"), 25);
+        VendableItem f = new VendableItem(6, "Whetstone", new BigDecimal("0.50"), 25);
+        VendableItem g = new VendableItem(7, "Antidote", new BigDecimal("0.75"), 25);
+        VendableItem h = new VendableItem(8, "BlueMushroom", new BigDecimal("0.50"), 10);
+        VendableItem i = new VendableItem(9, "Rathalos Plate", new BigDecimal("2000.00"), 0);
+        inventory.put(a.getName(), a);
+        inventory.put(b.getName(), b);
+        inventory.put(c.getName(), c);
+        inventory.put(d.getName(), d);
+        inventory.put(e.getName(), e);
+        inventory.put(f.getName(), f);
+        inventory.put(g.getName(), g);
+        inventory.put(h.getName(), h);
+        inventory.put(i.getName(), i);
         writeFile();
     }
 

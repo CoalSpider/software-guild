@@ -8,9 +8,29 @@ and open the template in the editor.
     Author     : Ben Norman
 */
 
+body{
+    font-family: "Impact";
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: #bca260;
+    text-shadow: -4px 0 black, 0 4px black, 4px 0 black, 0 -4px black, -4px 4px black, 4px -4px black, -4px -4px black, 4px 4px black;
+}
+
+.changeButton{
+    padding: 0;
+    letter-spacing: 5px;
+}
+
 h3,
-h1 {
+h1,
+label{
     text-align: center;
+    font-family: "Impact";
+    text-shadow: -4px 0 black, 0 4px black, 4px 0 black, 0 -4px black, -4px 4px black, 4px -4px black, -4px -4px black, 4px 4px black;
+}
+
+label{
+    font-size: 24px;
 }
 
 hr {
@@ -18,8 +38,8 @@ hr {
 }
 
 .item {
-    background-color: white;
-    border: 1px solid black;
+    background: linear-gradient(45deg,#653A27,#876C4F, #C5A87E, #876C4F, #653A27);
+    border: 3px outset black;
     margin: 2em;
     min-width: calc(200px - 32px);
     max-width: 30%;
@@ -45,9 +65,25 @@ input {
 
 input,
 button {
-    width: 90%;
-    margin: 0 auto;
-    padding: .2em;
-    display: block;
+    width: 95%;
+    /*margin: 0 auto;*/
+    /*padding: .2em;*/
+    /*display: block;*/
     text-align: center;
+}
+button{
+    background: linear-gradient(45deg,#653A27,#876C4F);
+    border: 3px outset black;
+    text-shadow: -4px 0 black, 0 4px black, 4px 0 black, 0 -4px black, -4px 4px black, 4px -4px black, -4px -4px black, 4px 4px black;
+}
+
+input{
+    background: linear-gradient(45deg,#C5A87E,#C5A87E);
+    border: 3px inset black;
+    text-shadow: -4px 0 black, 0 4px black, 4px 0 black, 0 -4px black, -4px 4px black, 4px -4px black, -4px -4px black, 4px 4px black;
+}
+
+body{
+    background-image: url("http://i.imgur.com/aHv08BP.jpg");
+    background-color: black;
 }

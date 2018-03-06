@@ -52,18 +52,18 @@
                         </div>
                         <form action="addMoney" method="POST">
                             <div class="row">
-                                <div class="col">
+                                <div class="col changeButton">
                                     <button type="submit" formaction="addDollar">Add Dollar</button>
                                 </div>
-                                <div class="col">
+                                <div class="col changeButton">
                                     <button type="submit" formaction="addQuater">Add Quarter</button>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col">
+                                <div class="col changeButton">
                                     <button type="submit" formaction="addDime">Add Dime</button>
                                 </div>
-                                <div class="col">
+                                <div class="col changeButton">
                                     <button type="submit" formaction="addNickel">Add Nickel</button>
                                 </div>
                             </div>
