@@ -42,7 +42,7 @@ create table RoomAmenity(
 create table RoomRate(
     roomId int not null,
     `date` date not null,
-    rate decimal not null,
+    rate decimal(12,2) not null,
     primary key (roomId, `date`),
     foreign key (roomId) references Room(roomId)
 );
@@ -60,7 +60,7 @@ create table Reservation(
     customerId int not null,
     startDate date not null,
     endDate date not null,
-    canceled bit default 0 not null,
+    canceled boolean default 0 not null,
     foreign key (customerId) references Customer(customerId)
 );
 
@@ -68,7 +68,7 @@ create table RoomReservation(
 	roomId int not null,
     reservationId int not null,
     upgradedFrom int null,
-    waived bit default 0 not null,
+    waived boolean default 0 not null,
     primary key (roomId, reservationId),
     foreign key (roomId) references Room(roomId),
     foreign key (reservationId) references Reservation(reservationId),
@@ -124,7 +124,7 @@ create table Promotion(
     startDate date not null,
     endDate date not null,
     promotionTypeId int not null,
-    amount decimal,
+    amount decimal(12,2),
     foreign key (promotionTypeId) references PromotionType(promotionTypeId)
 );
 
@@ -139,8 +139,8 @@ create table ReservationPromotion(
 create table InvoiceHeader(
 	invoiceHeaderId int primary key not null auto_increment,
     reservationId int not null,
-    total decimal not null,
-    tax decimal null,
+    total decimal(12,2) not null,
+    tax decimal(12,2) null,
     totalAndTax decimal not null,
     foreign key (reservationId) references Reservation(reservationId)
 );
@@ -149,6 +149,6 @@ create table InvoiceDetails(
 	invoiceDetailsId int primary key not null auto_increment,
     invoiceHeaderId int not null,
     itemDescription varchar(128) not null,
-    amount decimal not null,
+    amount decimal(12,2) not null,
     foreign key (invoiceHeaderId) references InvoiceHeader(invoiceHeaderId)
 );
