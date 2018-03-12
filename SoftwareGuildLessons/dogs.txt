@@ -1,3 +1,0 @@
-Fido::Lab::70::4
-Beast::Yellow Lab::120::10
-Sadie::Mutt::30::7
