@@ -98,7 +98,7 @@ create table Addon(
 
 create table AddonRate(
 	addonId int not null,
-    rate decimal not null,
+    rate decimal(12,2) not null,
     `date` date not null,
     primary key (addonId, `date`),
     foreign key (addonId) references Addon(addonId)
@@ -108,7 +108,7 @@ create table ReservationAddon(
 	reservationId int not null,
     addonId int not null,
     `date` date not null,
-    waived bit default 0 not null,
+    waived boolean default 0 not null,
     primary key (reservationId, addonId),
     foreign key (reservationId) references Reservation(reservationId),
     foreign key (addonId) references Addon(addonId)
@@ -141,7 +141,7 @@ create table InvoiceHeader(
     reservationId int not null,
     total decimal(12,2) not null,
     tax decimal(12,2) null,
-    totalAndTax decimal not null,
+    totalAndTax decimal(12,2) not null,
     foreign key (reservationId) references Reservation(reservationId)
 );
 
