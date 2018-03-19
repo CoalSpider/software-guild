@@ -67,4 +67,5 @@ create table HeroOrganization(
     foreign key (organizationId) references Organization(organizationId)
 );
 
-SELECT s.* FROM herosuperpower AS hs JOIN superpower AS s ON s.superpowerId = hs.superpowerid WHERE hs.heroId=1;
+-- SELECT s.* FROM herosuperpower AS hs JOIN superpower AS s ON s.superpowerId = hs.superpowerid WHERE hs.heroId=1;
+(select s.* from sighting as s order by dateAndTime desc limit 10) order by dateAndTime;

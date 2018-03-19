@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sg.herosightings.dao;
+package com.sg.herosightings.service;
 
 import com.sg.herosightings.model.Hero;
 import com.sg.herosightings.model.Location;
@@ -16,8 +16,7 @@ import java.util.List;
  *
  * @author Ben Norman
  */
-public interface HeroDao {
-
+public interface HeroService {
     //================================================================
     // Hero methods
     //================================================================
@@ -88,18 +87,10 @@ public interface HeroDao {
     // Misc methods
     //================================================================
     List<Superpower> getHeroSuperpowers(int heroId);
-    
-//TODO    List<Hero> getHerosWithSuperpower(int superpowerId);
 
     List<Organization> getHeroOrganizations(int heroId);
     
-//TODO    List<Hero> getHerosWithOrganization(int organizationId);
-    
-//TODO    List<Sighting> getSightingWithHero(int heroId);
-            
     List<Hero> getSightingHeros(int sightingId);
     
     List<Sighting> getMostRecentSightings(int count);
-    
-//TODO    List<Sighting> getSightingWithLocation(int locationId);
 }
