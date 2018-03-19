@@ -13,6 +13,7 @@ import com.sg.herosightings.model.Superpower;
 import com.sg.herosightings.model.TableObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -55,20 +56,31 @@ public class HeroDaoDBImpl implements HeroDao {
     private static final String GET_SUPERPOWERS = "SELECT * FROM superpower";
 
     // organization specifc queries
-    private static final String CREATE_ORGANIZATION = "INSERT INTO organization (`name`, description, address, email, phoneNumber) VALUES(?,?,?,?,?)";
+    private static final String CREATE_ORGANIZATION = "INSERT INTO organization (`name`, description, address, phoneNumber, email) VALUES(?,?,?,?,?)";
     private static final String DELETE_ORGANIZATION = "DELETE FROM organization WHERE organizationId = ?";
-    private static final String UPDATE_ORGANIZATION = "UPDATE organization SET `name`=?, description=?, address=?, email=?, phoneNumber=? WHERE organizationId = ?";
+    private static final String UPDATE_ORGANIZATION = "UPDATE organization SET `name`=?, description=?, address=?, phoneNumber=?, email=? WHERE organizationId = ?";
     private static final String GET_ORGANIZATION_BY_ID = "SELECT * FROM organization WHERE organizationId = ?";
     private static final String GET_ORGANIZATIONS = "SELECT * FROM organization";
-    
+
     // misc
     private static final String GET_SUPEPOWERS_OF_HERO = "SELECT s.* FROM herosuperpower AS hs JOIN superpower AS s ON s.superpowerId = hs.superpowerId WHERE hs.heroId=?";
     private static final String GET_ORGANIZAIONS_OF_HERO = "SELECT o.* FROM heroorganization AS ho JOIN organization AS o ON ho.organizationId = o.organizationId WHERE heroId=?";
+    private static final String GET_HEROS_FROM_SIGHTING = "SELECT h.heroId, h.name, h.description FROM herosighting AS hs JOIN hero AS h ON h.heroId = hs.heroId WHERE sightingId = ?";
 
     private JdbcTemplate template;
 
     public void setTemplate(JdbcTemplate template) {
         this.template = template;
+    }
+
+    // WHY DONT WE DO THIS? ASK KYLE DURING CODE REVIEW
+    // REASONS I KNOW OF: SLOWER
+    private <T> List<T> getAll(String tableName, RowMapper<T> rowMapper) {
+        return template.query("SELECT * FROM " + tableName, rowMapper);
+    }
+
+    private <T> List<T> getOne(String tableName, String idName, int id, RowMapper<T> rowMapper) {
+        return template.query("SELECT * FROM " + tableName + " WHERE " + idName + " = " + id, rowMapper);
     }
 
     //================================================================
@@ -93,6 +105,7 @@ public class HeroDaoDBImpl implements HeroDao {
         Hero h = getHeroById(heroId);
         deletePairsFromBridge(heroId, "herosuperpower", "heroId");
         deletePairsFromBridge(heroId, "heroorganization", "heroId");
+        deletePairsFromBridge(heroId, "herosighting", "heroId");
         template.update(DELETE_HERO, heroId);
         return h;
     }
@@ -109,9 +122,9 @@ public class HeroDaoDBImpl implements HeroDao {
 
     @Override
     public Hero getHeroById(int heroId) {
-        try{
+        try {
             return template.queryForObject(GET_HERO_BY_ID, new HeroMapper(), heroId);
-        }catch(EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             // if theres was no result we want to return null;
         }
         return null;
@@ -120,6 +133,7 @@ public class HeroDaoDBImpl implements HeroDao {
     @Override
     public List<Hero> getAllHeros() {
         return template.query(GET_HEROS, new HeroMapper());
+//       return getAll("hero",new HeroMapper());
     }
 
     // TODO: make public part of interface
@@ -155,7 +169,7 @@ public class HeroDaoDBImpl implements HeroDao {
         template.update(CREATE_SIGHTING, sighting.getLocation().getId(), java.sql.Timestamp.valueOf(sighting.getDateAndTime()));
         int sightingId = template.queryForObject("select LAST_INSERT_ID()", Integer.class);
         sighting.setId(sightingId);
-        replacePairsInBridge(sightingId, sighting.getHeros(), "herosighting", "heroId", "sightingId");
+        replacePairsInBridge(sightingId, sighting.getHeros(), "herosighting", "sightingId", "heroId");
         return sighting;
     }
 
@@ -163,6 +177,7 @@ public class HeroDaoDBImpl implements HeroDao {
     @Transactional
     public Sighting deleteSighting(int sightingId) {
         Sighting s = getSightingById(sightingId);
+        deletePairsFromBridge(sightingId, "herosighting", "sightingId");
         template.update(DELETE_SIGHTING, sightingId);
         return s;
     }
@@ -170,22 +185,28 @@ public class HeroDaoDBImpl implements HeroDao {
     @Override
     public Sighting updateSighting(int sightingId, Sighting updatedSighting) {
         template.update(UPDATE_SIGHTING, updatedSighting.getLocation().getId(), java.sql.Timestamp.valueOf(updatedSighting.getDateAndTime()), sightingId);
+        replacePairsInBridge(sightingId, updatedSighting.getHeros(), "herosighting", "sightingId", "heroId");
         updatedSighting.setId(sightingId);
         return updatedSighting;
     }
 
     @Override
     public Sighting getSightingById(int sightingId) {
-        return template.queryForObject(GET_SIGHTING_BY_ID, new SightingMapper(), sightingId);
+        try {
+            return template.queryForObject(GET_SIGHTING_BY_ID, new SightingMapper(), sightingId);
+        } catch (EmptyResultDataAccessException e) {
+            // if theres was no result we want to return null;
+        }
+        return null;
     }
 
     @Override
-    public List<Sighting> getAllSighting() {
+    public List<Sighting> getAllSightings() {
         return template.query(GET_SIGHTINGS, new SightingMapper());
     }
 
     private List<Hero> getSightingHeros(int sightingId) {
-        return template.query("SELECT h.heroId, h.name, h.description FROM herosighting AS hs JOIN hero AS h ON h.heroId = hs.heroId WHERE sightingId = " + sightingId, new HeroMapper());
+        return template.query(GET_HEROS_FROM_SIGHTING, new HeroMapper(), sightingId);
     }
 
     private final class SightingMapper implements RowMapper<Sighting> {
@@ -196,7 +217,7 @@ public class HeroDaoDBImpl implements HeroDao {
             s.setId(rs.getInt("sightingId"));
             s.setLocation(getLocationById(rs.getInt("locationId")));
             s.setHeros(getSightingHeros(s.getId()));
-            s.setDateAndTime(LocalDateTime.MIN);
+            s.setDateAndTime(rs.getTimestamp("dateAndTime").toLocalDateTime());
             return s;
         }
 
@@ -208,7 +229,12 @@ public class HeroDaoDBImpl implements HeroDao {
     @Override
     @Transactional
     public Location createLocation(Location location) {
-        template.update(CREATE_LOCATION, location.getName(), location.getDescription(), location.getAddress(), location.getLatitude(), location.getLongitude());
+        template.update(CREATE_LOCATION, 
+                location.getName(), 
+                location.getDescription(), 
+                location.getAddress(), 
+                location.getLatitude(), 
+                location.getLongitude());
         int locationId = template.queryForObject("select LAST_INSERT_ID()", Integer.class);
         location.setId(locationId);
         return location;
@@ -217,22 +243,33 @@ public class HeroDaoDBImpl implements HeroDao {
     @Override
     @Transactional
     public Location deleteLocation(int locationId) {
-        // TODO: delete sightings with location
         Location l = getLocationById(locationId);
-        template.update(DELETE_LOCATION,locationId);
+        template.update("DELETE FROM sighting WHERE locationId=" + locationId);
+        template.update(DELETE_LOCATION, locationId);
         return l;
     }
 
     @Override
     public Location updateLocation(int locationId, Location updatedLocation) {
-        template.update(UPDATE_LOCATION, updatedLocation.getName(), updatedLocation.getDescription(), updatedLocation.getAddress(), updatedLocation.getLatitude(), updatedLocation.getLongitude(), locationId);
+        template.update(UPDATE_LOCATION, 
+                updatedLocation.getName(), 
+                updatedLocation.getDescription(), 
+                updatedLocation.getAddress(), 
+                updatedLocation.getLatitude(), 
+                updatedLocation.getLongitude(),
+                locationId);
         updatedLocation.setId(locationId);
         return updatedLocation;
     }
 
     @Override
     public Location getLocationById(int locationId) {
-        return template.queryForObject(GET_LOCATION_BY_ID, new LocationMapper(), locationId);
+        try {
+            return template.queryForObject(GET_LOCATION_BY_ID, new LocationMapper(), locationId);
+        } catch (EmptyResultDataAccessException e) {
+            // if theres was no result we want to return null;
+        }
+        return null;
     }
 
     @Override
@@ -248,6 +285,7 @@ public class HeroDaoDBImpl implements HeroDao {
             l.setId(rs.getInt("locationId"));
             l.setName(rs.getString("name"));
             l.setDescription(rs.getString("description"));
+            l.setAddress(rs.getString("address"));
             l.setLatitude(rs.getBigDecimal("latitude"));
             l.setLongitude(rs.getBigDecimal("longitude"));
             return l;
@@ -272,7 +310,7 @@ public class HeroDaoDBImpl implements HeroDao {
     public Superpower deleteSuperpower(int superpowerId) {
         Superpower s = getSuperpowerById(superpowerId);
         deletePairsFromBridge(superpowerId, "herosuperpower", "superpowerId");
-        template.update(DELETE_SUPERPOWER,superpowerId);
+        template.update(DELETE_SUPERPOWER, superpowerId);
         return s;
     }
 
@@ -285,7 +323,12 @@ public class HeroDaoDBImpl implements HeroDao {
 
     @Override
     public Superpower getSuperpowerById(int superpowerId) {
-        return template.queryForObject(GET_SUPERPOWER_BY_ID, new SuperpowerMapper(), superpowerId);
+        try {
+            return template.queryForObject(GET_SUPERPOWER_BY_ID, new SuperpowerMapper(), superpowerId);
+        } catch (EmptyResultDataAccessException e) {
+            // if theres was no result we want to return null;
+        }
+        return null;
     }
 
     @Override
@@ -310,23 +353,49 @@ public class HeroDaoDBImpl implements HeroDao {
     // Organization methods
     //================================================================
     @Override
+    @Transactional
     public Organization createOrganization(Organization organization) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        template.update(CREATE_ORGANIZATION, 
+                organization.getName(), 
+                organization.getDescription(),
+                organization.getAddress(),
+                organization.getPhoneNumber(),
+                organization.getEmail());
+        int organizationId = template.queryForObject("select LAST_INSERT_ID()", Integer.class);
+        organization.setId(organizationId);
+        return organization;
     }
 
     @Override
+    @Transactional
     public Organization deleteOrganization(int organizationId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Organization org = getOrganizationById(organizationId);
+        deletePairsFromBridge(organizationId, "heroorganization", "organizationId");
+        template.update(DELETE_ORGANIZATION, organizationId);
+        return org;
     }
 
     @Override
     public Organization updateOrganization(int organizationId, Organization updatedOrganization) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        template.update(UPDATE_ORGANIZATION, 
+                updatedOrganization.getName(), 
+                updatedOrganization.getDescription(), 
+                updatedOrganization.getAddress(), 
+                updatedOrganization.getPhoneNumber(),
+                updatedOrganization.getEmail(), 
+                organizationId);
+        updatedOrganization.setId(organizationId);
+        return updatedOrganization;
     }
 
     @Override
     public Organization getOrganizationById(int organizationId) {
-        return template.queryForObject(GET_ORGANIZATION_BY_ID, new OrganizationMapper(), organizationId);
+        try {
+            return template.queryForObject(GET_ORGANIZATION_BY_ID, new OrganizationMapper(), organizationId);
+        } catch (EmptyResultDataAccessException e) {
+            // if theres was no result we want to return null;
+        }
+        return null;
     }
 
     @Override
@@ -389,8 +458,9 @@ public class HeroDaoDBImpl implements HeroDao {
         insertQuery.append(columnA);
         insertQuery.append(",");
         insertQuery.append(columnB);
-        insertQuery.append(") VALUES(");
+        insertQuery.append(") VALUES");
         for (TableObject t : objects) {
+            insertQuery.append("(");
             insertQuery.append(id);
             insertQuery.append(",");
             insertQuery.append(t.getId());

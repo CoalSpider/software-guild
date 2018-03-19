@@ -42,7 +42,7 @@ public interface HeroDao {
 
     Sighting getSightingById(int sightingId);
 
-    List<Sighting> getAllSighting();
+    List<Sighting> getAllSightings();
 
     //================================================================
     // Location methods

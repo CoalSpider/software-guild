@@ -1,4 +1,5 @@
 drop database if exists Heros;
+
 create database Heros;
 
 use Heros;
@@ -65,4 +66,5 @@ create table HeroOrganization(
     foreign key (heroId) references Hero(heroId),
     foreign key (organizationId) references Organization(organizationId)
 );
+
 SELECT s.* FROM herosuperpower AS hs JOIN superpower AS s ON s.superpowerId = hs.superpowerid WHERE hs.heroId=1;
