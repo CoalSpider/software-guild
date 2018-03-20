@@ -43,4 +43,10 @@
           class="com.sg.herosightings.dao.HeroDaoDBImpl">
         <property name="template" ref="jdbcTemplate"/>
     </bean>
+    
+    <bean id="heroService"
+        class="com.sg.herosightings.service.HeroServiceImpl">
+        <property name="dao" ref="heroDao"/>
+    </bean>
+    
 </beans>

@@ -1,8 +1,8 @@
-drop database if exists Heros;
+drop database if exists HerosTest;
 
-create database Heros;
+create database HerosTest;
 
-use Heros;
+use HerosTest;
 
 create table Hero(
 	heroId int primary key auto_increment,
