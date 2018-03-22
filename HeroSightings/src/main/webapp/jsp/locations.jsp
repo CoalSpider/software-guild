@@ -1,5 +1,5 @@
 <%-- 
-    Document   : index
+    Document   : location
     Created on : Mar 20, 2018, 12:08:01 PM
     Author     : Ben Norman
 --%>
@@ -12,7 +12,8 @@
     <head>
         <title>Index Page</title>
         <!-- Bootstrap core CSS -->
-        <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">        
+        <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">   
+        <link href="${pageContext.request.contextPath}/css/debugStyles.css" rel="stylesheet">     
     </head>
     <body>
         <div class="container">
@@ -20,24 +21,19 @@
             <hr/>
             <div class="navbar">
                 <ul class="nav nav-tabs">
-                    <li role="presentation" class="active"><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
+                    <li role="presentation"><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/heros">Heros</a></li>
-                    <li role="presentation"><a href="${pageContext.request.contextPath}/sightings">Sightings</a></li>
+                    <li role="presentation"><a href="${pageContext.request.contextPath}/sighting">Sightings</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/organizations">Organizations</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/superpowers">Superpowers</a></li>
-                    <li role="presentation"><a href="${pageContext.request.contextPath}/locations">Locations</a></li>
+                    <li role="presentation" class="active"><a href="${pageContext.request.contextPath}/locations">Locations</a></li>
                 </ul>    
             </div>
             <h2>Home Page</h2>
             <div>
-                <h3>News Feed</h3>
-                <c:forEach var="sighting" items="${recentSightings}">
-                    <div>
-                        <p><c:out value="${sighting.id}"/></p>
-                        <p><c:out value="${sighting.dateAndTime}"/></p>
-                        <p><c:out value="${sighting.location.name}"/></p>
-                        <p><c:out value="${sighting.location.description}"/></p>
-                    </div>
+                <!--<h1>Hello World!</h1>-->
+                <c:forEach var="location" items="${locations}">
+                    <a href="${pageContext.request.contextPath}/location${location.id}"><c:out value="${location.id}:${location.name}"/></a>
                 </c:forEach>
             </div>
         </div>

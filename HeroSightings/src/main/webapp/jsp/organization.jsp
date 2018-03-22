@@ -1,6 +1,6 @@
 <%-- 
-    Document   : index
-    Created on : Mar 20, 2018, 12:08:01 PM
+    Document   : organization
+    Created on : Mar 20, 2018, 2:10:50 PM
     Author     : Ben Norman
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -10,9 +10,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Index Page</title>
-        <!-- Bootstrap core CSS -->
-        <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">        
+        <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">  
+        <link href="${pageContext.request.contextPath}/css/debugStyles.css" rel="stylesheet">
+        <title>JSP Page</title>
     </head>
     <body>
         <div class="container">
@@ -20,7 +20,7 @@
             <hr/>
             <div class="navbar">
                 <ul class="nav nav-tabs">
-                    <li role="presentation" class="active"><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
+                    <li role="presentation"><a href="${pageContext.request.contextPath}/">Home</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/heros">Heros</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/sightings">Sightings</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/organizations">Organizations</a></li>
@@ -28,23 +28,32 @@
                     <li role="presentation"><a href="${pageContext.request.contextPath}/locations">Locations</a></li>
                 </ul>    
             </div>
-            <h2>Home Page</h2>
-            <div>
-                <h3>News Feed</h3>
-                <c:forEach var="sighting" items="${recentSightings}">
-                    <div>
-                        <p><c:out value="${sighting.id}"/></p>
-                        <p><c:out value="${sighting.dateAndTime}"/></p>
-                        <p><c:out value="${sighting.location.name}"/></p>
-                        <p><c:out value="${sighting.location.description}"/></p>
-                    </div>
-                </c:forEach>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h4>Image of Organization</h4>
+                </div>
+                <div class="col-sm-3">
+                    <h4><c:out value="${organization.name}"/></h4>
+                    <c:out value="${organization.description}"/>
+                </div>
+                <div class="col-sm-3">
+                    <c:out value="${organization.address}"/>
+                </div>
+                <div class="col-sm-3">
+                    <h4>contact info</h4>
+                    <c:out value="${organization.address}"/>
+                    <c:out value="${organization.email}"/>
+                    <c:out value="${organization.phoneNumber}"/>
+                </div>
+            </div>
+            <div class="row">
+                <a href="${pageContext.request.contextPath}/editOrganization${organization.id}">Edit Organization</a>
+                <a href="${pageContext.request.contextPath}/deleteOrganization${organization.id}">Delete Organization</a>
             </div>
         </div>
+
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="${pageContext.request.contextPath}/js/jquery-3.1.1.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-
     </body>
 </html>
-
