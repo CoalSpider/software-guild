@@ -21,7 +21,7 @@
             <hr/>
             <div class="navbar">
                 <ul class="nav nav-tabs">
-                    <li role="presentation"><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
+                    <li role="presentation"><a href="${pageContext.request.contextPath}/index">Home</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/heros">Heros</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/sighting">Sightings</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/organizations">Organizations</a></li>
@@ -35,6 +35,11 @@
                 <c:forEach var="location" items="${locations}">
                     <a href="${pageContext.request.contextPath}/location${location.id}"><c:out value="${location.id}:${location.name}"/></a>
                 </c:forEach>
+            </div>
+            <div>
+                <form method="GET" action="${pageContext.request.contextPath}/createLocation">
+                    <button type="submit">Create Location</button>
+                </form>
             </div>
         </div>
         <!-- Placed at the end of the document so the pages load faster -->
