@@ -34,7 +34,11 @@
                     <a href="${pageContext.request.contextPath}/organization${organization.id}"><c:out value="${organization.id}:${organization.name}"/></a>
                 </c:forEach>
             </div>
-
+            <div>
+                <form method="GET" action="${pageContext.request.contextPath}/createOrganization">
+                    <button type="submit">Create Organization</button>
+                </form>
+            </div>
             <!-- Placed at the end of the document so the pages load faster -->
             <script src="${pageContext.request.contextPath}/js/jquery-3.1.1.min.js"></script>
             <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>

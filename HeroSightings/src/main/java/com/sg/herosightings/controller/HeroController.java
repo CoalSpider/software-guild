@@ -12,7 +12,10 @@ import com.sg.herosightings.model.Sighting;
 import com.sg.herosightings.model.Superpower;
 import com.sg.herosightings.service.HeroService;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -160,16 +163,12 @@ public class HeroController {
             @RequestParam(value = "organizationArray", defaultValue = "") ArrayList<Integer> organizationArray) {
         // extract powers
         List<Superpower> powers = new ArrayList<>();
-        for (Integer i : powersArray) {
-            powers.add(service.getSuperpowerById(i));
-        }
+        powersArray.forEach(i -> powers.add(service.getSuperpowerById(i)));
         hero.setPowers(powers);
 
         // extract orgs
         List<Organization> orgs = new ArrayList<>();
-        for (Integer i : organizationArray) {
-            orgs.add(service.getOrganizationById(i));
-        }
+        organizationArray.forEach(i -> orgs.add(service.getOrganizationById(i)));
         hero.setOrganizations(orgs);
 
         hero = service.updateHero(hero.getId(), hero);
@@ -183,21 +182,17 @@ public class HeroController {
             @RequestParam(value = "organizationArray", defaultValue = "") ArrayList<Integer> organizationArray) {
         // extract powers
         List<Superpower> powers = new ArrayList<>();
-        for (Integer i : powersArray) {
-            powers.add(service.getSuperpowerById(i));
-        }
+        powersArray.forEach(i -> powers.add(service.getSuperpowerById(i)));
         hero.setPowers(powers);
 
         // extract orgs
         List<Organization> orgs = new ArrayList<>();
-        for (Integer i : organizationArray) {
-            orgs.add(service.getOrganizationById(i));
-        }
+        organizationArray.forEach(i -> orgs.add(service.getOrganizationById(i)));
         hero.setOrganizations(orgs);
-        
+
         // create hero
         hero = service.createHero(hero);
-        
+
         return "redirect:/hero" + hero.getId();
     }
 
@@ -217,41 +212,41 @@ public class HeroController {
         model.addAttribute("superpower", s);
         return "superpower";
     }
-    
+
     @GetMapping("/createSuperpower")
-    public String createSuperpower(){
+    public String createSuperpower() {
         return "createSuperpower";
     }
-    
+
     @GetMapping("/deleteSuperpower{id}")
-    public String deleteSuperpower(@PathVariable("id") int id){
+    public String deleteSuperpower(@PathVariable("id") int id) {
         service.deleteSuperpower(id);
         return "redirect:/superpowers";
     }
-    
+
     @GetMapping("/editSuperpower{id}")
-    public String editSuperpower(@PathVariable("id") int id, Model model){
+    public String editSuperpower(@PathVariable("id") int id, Model model) {
         Superpower s = service.getSuperpowerById(id);
         model.addAttribute("superpower", s);
         return "editSuperpower";
     }
-    
+
     @PostMapping("/saveChangesSuperpower")
-    public String saveSuperpower(Superpower power){
+    public String saveSuperpower(Superpower power) {
         power = service.updateSuperpower(power.getId(), power);
-        return "redirect:/superpower"+power.getId();
+        return "redirect:/superpower" + power.getId();
     }
-    
+
     @PostMapping("/saveNewSuperpower")
-    public String saveNewSuperpower(Superpower power){
+    public String saveNewSuperpower(Superpower power) {
         power = service.createSuperpower(power);
-        return "redirect:/superpower"+power.getId();
+        return "redirect:/superpower" + power.getId();
     }
 
     //=======================================================
     // ORGANIZATION METHODS
     //=======================================================
-     @GetMapping("/organizations")
+    @GetMapping("/organizations")
     public String displayOrganizations(Model model) {
         List<Organization> powers = service.getAllOrganizations();
         model.addAttribute("organizations", powers);
@@ -264,41 +259,41 @@ public class HeroController {
         model.addAttribute("organization", s);
         return "organization";
     }
-    
+
     @GetMapping("/createOrganization")
-    public String createOrganization(){
+    public String createOrganization() {
         return "createOrganization";
     }
-    
+
     @GetMapping("/deleteOrganization{id}")
-    public String deleteOrganization(@PathVariable("id") int id){
+    public String deleteOrganization(@PathVariable("id") int id) {
         service.deleteOrganization(id);
         return "redirect:/organizations";
     }
-    
+
     @GetMapping("/editOrganization{id}")
-    public String editOrganization(@PathVariable("id") int id, Model model){
+    public String editOrganization(@PathVariable("id") int id, Model model) {
         Organization s = service.getOrganizationById(id);
         model.addAttribute("organization", s);
         return "editOrganization";
     }
-    
+
     @PostMapping("/saveChangesOrganization")
-    public String saveOrganization(Organization power){
-        power = service.updateOrganization(power.getId(), power);
-        return "redirect:/organization"+power.getId();
+    public String saveOrganization(Organization organization) {
+        organization = service.updateOrganization(organization.getId(), organization);
+        return "redirect:/organization" + organization.getId();
     }
-    
+
     @PostMapping("/saveNewOrganization")
-    public String saveNewOrganization(Organization power){
+    public String saveNewOrganization(Organization power) {
         power = service.createOrganization(power);
-        return "redirect:/organization"+power.getId();
+        return "redirect:/organization" + power.getId();
     }
 
     //=======================================================
     // SIGHTING METHODS
     //=======================================================
-     @GetMapping("/sightings")
+    @GetMapping("/sightings")
     public String displaySightings(Model model) {
         List<Sighting> powers = service.getAllSightings();
         model.addAttribute("sightings", powers);
@@ -311,41 +306,90 @@ public class HeroController {
         model.addAttribute("sighting", s);
         return "sighting";
     }
-    
+
     @GetMapping("/createSighting")
-    public String createSighting(){
+    public String createSighting() {
         return "createSighting";
     }
-    
+
     @GetMapping("/deleteSighting{id}")
-    public String deleteSighting(@PathVariable("id") int id){
+    public String deleteSighting(@PathVariable("id") int id) {
         service.deleteSighting(id);
         return "redirect:/sightings";
     }
-    
+
     @GetMapping("/editSighting{id}")
-    public String editSighting(@PathVariable("id") int id, Model model){
+    public String editSighting(@PathVariable("id") int id, Model model) {
         Sighting s = service.getSightingById(id);
         model.addAttribute("sighting", s);
+        // get all heros not already part of sighting
+        List<Hero> heros = service
+                .getAllHeros()
+                .stream()
+                .filter(hero -> s.getHeros().contains(hero) == false)
+                .collect(Collectors.toList());
+        model.addAttribute("sightingHeros", s.getHeros());
+        model.addAttribute("heros", heros);
+        model.addAttribute("date", s.getDateAndTime().toLocalDate());
+        model.addAttribute("time", s.getDateAndTime().toLocalTime());
         return "editSighting";
     }
-    
+
     @PostMapping("/saveChangesSighting")
-    public String saveSighting(Sighting power){
-        power = service.updateSighting(power.getId(), power);
-        return "redirect:/sighting"+power.getId();
+    public String saveSighting(
+            @RequestParam(value = "id") Integer id,
+            @RequestParam(value = "locationId") Integer locationId,
+            @RequestParam(value = "herosArray", defaultValue = "") ArrayList<Integer> herosArray,
+            @RequestParam(value = "date") String date,
+            @RequestParam(value = "time") String time) {
+        // create location
+        Location l = service.getLocationById(locationId);
+        // create heros
+        List<Hero> heros = new ArrayList<>();
+        herosArray.forEach(i -> heros.add(service.getHeroById(i)));
+        // create datetime
+        LocalDate ld = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+        LocalTime lt = LocalTime.parse(time, DateTimeFormatter.ISO_TIME);
+        LocalDateTime ldt = LocalDateTime.of(ld, lt);
+        // create sighting
+        Sighting s = new Sighting();
+        s.setLocation(l);
+        s.setHeros(heros);
+        s.setDateAndTime(ldt);
+        // update
+        s = service.updateSighting(id, s);
+        return "redirect:/sighting" + s.getId();
     }
-    
+
     @PostMapping("/saveNewSighting")
-    public String saveNewSighting(Sighting power){
-        power = service.createSighting(power);
-        return "redirect:/sighting"+power.getId();
+    public String saveNewSighting(
+            @RequestParam(value = "locationId") Integer locationId,
+            @RequestParam(value = "herosArray", defaultValue = "") ArrayList<Integer> herosArray,
+            @RequestParam(value = "date") String date,
+            @RequestParam(value = "time") String time) {
+        // create location
+        Location l = service.getLocationById(locationId);
+        // create heros
+        List<Hero> heros = new ArrayList<>();
+        herosArray.forEach(i -> heros.add(service.getHeroById(i)));
+        // create datetime
+        LocalDate ld = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+        LocalTime lt = LocalTime.parse(time, DateTimeFormatter.ISO_TIME);
+        LocalDateTime ldt = LocalDateTime.of(ld, lt);
+        // create sighting
+        Sighting s = new Sighting();
+        s.setLocation(l);
+        s.setHeros(heros);
+        s.setDateAndTime(ldt);
+        // create sighting
+        s = service.createSighting(s);
+        return "redirect:/sighting" + s.getId();
     }
 
     //=======================================================
     // LOCATION METHODS
     //=======================================================
-     @GetMapping("/locations")
+    @GetMapping("/locations")
     public String displayLocations(Model model) {
         List<Location> powers = service.getAllLocations();
         model.addAttribute("locations", powers);
@@ -358,34 +402,34 @@ public class HeroController {
         model.addAttribute("location", s);
         return "location";
     }
-    
+
     @GetMapping("/createLocation")
-    public String createLocation(){
+    public String createLocation() {
         return "createLocation";
     }
-    
+
     @GetMapping("/deleteLocation{id}")
-    public String deleteLocation(@PathVariable("id") int id){
+    public String deleteLocation(@PathVariable("id") int id) {
         service.deleteLocation(id);
         return "redirect:/locations";
     }
-    
+
     @GetMapping("/editLocation{id}")
-    public String editLocation(@PathVariable("id") int id, Model model){
+    public String editLocation(@PathVariable("id") int id, Model model) {
         Location s = service.getLocationById(id);
         model.addAttribute("location", s);
         return "editLocation";
     }
-    
+
     @PostMapping("/saveChangesLocation")
-    public String saveLocation(Location power){
-        power = service.updateLocation(power.getId(), power);
-        return "redirect:/location"+power.getId();
+    public String saveLocation(Location location) {
+        location = service.updateLocation(location.getId(), location);
+        return "redirect:/location" + location.getId();
     }
-    
+
     @PostMapping("/saveNewLocation")
-    public String saveNewLocation(Location location){
+    public String saveNewLocation(Location location) {
         location = service.createLocation(location);
-        return "redirect:/location"+location.getId();
+        return "redirect:/location" + location.getId();
     }
 }

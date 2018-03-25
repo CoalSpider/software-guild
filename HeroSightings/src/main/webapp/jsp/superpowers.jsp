@@ -29,10 +29,14 @@
                 </ul>    
             </div>
             <div>
-                <!--<h1>Hello World!</h1>-->
                 <c:forEach var="superpower" items="${superpowers}">
                     <a href="${pageContext.request.contextPath}/superpower${superpower.id}"><c:out value="${superpower.id}:${superpower.name}"/></a>
                 </c:forEach>
+            </div>
+            <div>
+                <form method="GET" action="${pageContext.request.contextPath}/createSuperpower">
+                    <button type="submit">Create Superpower</button>
+                </form>
             </div>
 
             <!-- Placed at the end of the document so the pages load faster -->

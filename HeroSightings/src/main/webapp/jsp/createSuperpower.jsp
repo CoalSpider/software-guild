@@ -19,13 +19,13 @@
     </head>
     <body>
         <div class="container">
-            <form method="POST" action="${pageContext.request.contextPath}/saveNewLocation">
+            <form method="POST" action="${pageContext.request.contextPath}/saveNewSuperpower">
                 <div class="row">
-                    <div class="col-sm-4">
-                        <h4>IMAGE OF LOCATION</h4>
+                    <div class="col-sm-5">
+                        <h4>IMAGE OF SUPERPOWER</h4>
                     </div>
-                    <div class="col-sm-4">
-                        <h4>Location</h4>
+                    <div class="col-sm-5">
+                        <h4>Superpower</h4>
                         <!--name-->
                         <label for="name" value="name">Name</label>
                         <input name="name" id="name" type="text" value=""/> 
@@ -33,20 +33,9 @@
                         <label for="desc" value="description">Description</label>
                         <textarea name="description" id="desc" value="" rows="4" cols="35"></textarea>
                     </div>
-                    <div class="col-sm-4">
-                        <!--address-->
-                        <label for="address" value="address">Address</label>
-                        <input name="address" id="address" type="text" value=""/>
-                        <!--latitude-->
-                        <label for="latitude" value="latitude">Latitude</label>
-                        <input name="latitude" id="latitude" type="text" value=""/>
-                        <!--longitude-->
-                        <label for="longitude" value="longitude">Longitude</label>
-                        <input name="longitude" id="longitude" type="text" value=""/>
-                    </div>
                 </div>
                 <div class="row">
-                    <button type="submit">Create Location</button>
+                    <button type="submit">Create Superpower</button>
                 </div>
             </form>
         </div>

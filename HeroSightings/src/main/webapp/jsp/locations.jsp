@@ -23,15 +23,13 @@
                 <ul class="nav nav-tabs">
                     <li role="presentation"><a href="${pageContext.request.contextPath}/index">Home</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/heros">Heros</a></li>
-                    <li role="presentation"><a href="${pageContext.request.contextPath}/sighting">Sightings</a></li>
+                    <li role="presentation"><a href="${pageContext.request.contextPath}/sightings">Sightings</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/organizations">Organizations</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/superpowers">Superpowers</a></li>
                     <li role="presentation" class="active"><a href="${pageContext.request.contextPath}/locations">Locations</a></li>
                 </ul>    
             </div>
-            <h2>Home Page</h2>
             <div>
-                <!--<h1>Hello World!</h1>-->
                 <c:forEach var="location" items="${locations}">
                     <a href="${pageContext.request.contextPath}/location${location.id}"><c:out value="${location.id}:${location.name}"/></a>
                 </c:forEach>

@@ -1,5 +1,5 @@
 <%-- 
-    Document   : createLocation
+    Document   : editLocation
     Created on : Mar 20, 2018, 12:08:01 PM
     Author     : Ben Norman
 --%>
@@ -19,34 +19,35 @@
     </head>
     <body>
         <div class="container">
-            <form method="POST" action="${pageContext.request.contextPath}/saveNewLocation">
+            <form method="POST" action="${pageContext.request.contextPath}/saveChangesOrganization">
                 <div class="row">
                     <div class="col-sm-4">
-                        <h4>IMAGE OF LOCATION</h4>
+                        <h4>IMAGE OF ORGANIZATION</h4>
                     </div>
                     <div class="col-sm-4">
-                        <h4>Location</h4>
+                        <h4>Superpower</h4>
+                        <input name="id" type="hidden" value="${organization.id}">
                         <!--name-->
                         <label for="name" value="name">Name</label>
-                        <input name="name" id="name" type="text" value=""/> 
+                        <input name="name" id="name" type="text" value="${organization.name}"/> 
                         <!--description-->
                         <label for="desc" value="description">Description</label>
-                        <textarea name="description" id="desc" value="" rows="4" cols="35"></textarea>
+                        <textarea name="description" id="desc" value="${organization.description}" rows="4" cols="35"><c:out value="${organization.description}"/></textarea>
                     </div>
                     <div class="col-sm-4">
                         <!--address-->
                         <label for="address" value="address">Address</label>
-                        <input name="address" id="address" type="text" value=""/>
-                        <!--latitude-->
-                        <label for="latitude" value="latitude">Latitude</label>
-                        <input name="latitude" id="latitude" type="text" value=""/>
-                        <!--longitude-->
-                        <label for="longitude" value="longitude">Longitude</label>
-                        <input name="longitude" id="longitude" type="text" value=""/>
+                        <input name="address" id="address" type="text" value="${organization.address}"/>
+                        <!--email-->
+                        <label for="email" value="email">Email</label>
+                        <input name="email" id="email" type="text" value="${organization.email}"/>
+                        <!--phone number-->
+                        <label for="phoneNumber" value="phoneNumber">Phone Number</label>
+                        <input name="phoneNumber" id="phoneNumber" type="text" value="${organization.phoneNumber}"/>
                     </div>
                 </div>
                 <div class="row">
-                    <button type="submit">Create Location</button>
+                    <button type="submit">Save Changes</button>
                 </div>
             </form>
         </div>
