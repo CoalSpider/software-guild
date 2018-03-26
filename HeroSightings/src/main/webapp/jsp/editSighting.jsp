@@ -38,9 +38,9 @@
                         </select>
                         <!--dateAndTime-->
                         <label for="date" value="date">Date</label>
-                        <input name="date" id="date" type="date" value="${date}"/> 
+                        <input name="date" id="date" type="date" max="9999-01-01" value="${date}"/> 
                         <label for="time" value="time">Time</label>
-                        <input name="time" id="time" type="time" value="${time}"/> 
+                        <input name="time" id="time" type="time" max="9999-01-01" value="${time}"/> 
                     </div>
                     <div class="col-sm-4">
                         <h4>Heros</h4>

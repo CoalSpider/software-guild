@@ -40,10 +40,10 @@
                         <input name="address" id="address" type="text" value=""/>
                         <!--latitude-->
                         <label for="latitude" value="latitude">Latitude</label>
-                        <input name="latitude" id="latitude" type="text" value=""/>
+                        <input name="latitude" id="latitude" type="number" step="0.00001" min="-90" max="90" value="" required="true"/>
                         <!--longitude-->
                         <label for="longitude" value="longitude">Longitude</label>
-                        <input name="longitude" id="longitude" type="text" value=""/>
+                        <input name="longitude" id="longitude" type="number" step="0.00001" min="-180" max="180" value="" required="true"/>
                     </div>
                 </div>
                 <div class="row">

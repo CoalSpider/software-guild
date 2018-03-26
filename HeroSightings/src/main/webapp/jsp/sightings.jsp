@@ -35,7 +35,7 @@
                 </c:forEach>
             </div>
             <div>
-                <form method="GET" action="${pageContext.request.contextPath}/createHero">
+                <form method="GET" action="${pageContext.request.contextPath}/createSighting">
                     <button class="createButton">Create Sighting</button>
                 </form>
             </div>

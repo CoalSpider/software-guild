@@ -41,10 +41,10 @@
                         <input name="address" id="address" type="text" value="${location.address}"/>
                         <!--latitude-->
                         <label for="latitude" value="latitude">Latitude</label>
-                        <input name="latitude" id="latitude" type="text" value="${location.latitude}"/>
+                        <input name="latitude" id="latitude" type="number" step="0.00001" min="-90" max="90" value="${location.latitude}" required="true"/>
                         <!--longitude-->
                         <label for="longitude" value="longitude">Longitude</label>
-                        <input name="longitude" id="longitude" type="text" value="${location.longitude}"/>
+                        <input name="longitude" id="longitude" type="number" step="0.00001" min="-180" max="180" value="${location.longitude}" required="true"/>
                     </div>
                 </div>
                 <div class="row">

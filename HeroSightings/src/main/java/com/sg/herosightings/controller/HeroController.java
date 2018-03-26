@@ -308,7 +308,11 @@ public class HeroController {
     }
 
     @GetMapping("/createSighting")
-    public String createSighting() {
+    public String createSighting(Model model) {
+        model.addAttribute("locations", service.getAllLocations());
+        model.addAttribute("heros", service.getAllHeros());
+        model.addAttribute("date", LocalDate.now());
+        model.addAttribute("time", LocalTime.now());
         return "createSighting";
     }
 
