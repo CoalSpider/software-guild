@@ -11,12 +11,12 @@
 <html>
     <head>
         <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
-        <link href="${pageContext.request.contextPath}/css/debugStyles.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/css/mainStyles.css" rel="stylesheet">
         <title>Heros</title>
     </head>
     <body>
         <div class="container">
-            <h1>Spring MVC Application from Archetype</h1>
+            <h2>Hero Sightings</h2>
             <hr/>
             <div class="navbar">
                 <ul class="nav nav-tabs">
@@ -28,15 +28,14 @@
                     <li role="presentation"><a href="${pageContext.request.contextPath}/locations">Locations</a></li>
                 </ul>    
             </div>
-            <div>
-                <!--<h1>Hello World!</h1>-->
+            <div class="borderDiv">
                 <c:forEach var="organization" items="${organizations}">
-                    <a href="${pageContext.request.contextPath}/organization${organization.id}"><c:out value="${organization.id}:${organization.name}"/></a>
+                    <a href="${pageContext.request.contextPath}/organization${organization.id}"><c:out value="${organization.name}"/></a>
                 </c:forEach>
             </div>
             <div>
                 <form method="GET" action="${pageContext.request.contextPath}/createOrganization">
-                    <button type="submit">Create Organization</button>
+                    <button class="createButton" type="submit">Create Organization</button>
                 </form>
             </div>
             <!-- Placed at the end of the document so the pages load faster -->

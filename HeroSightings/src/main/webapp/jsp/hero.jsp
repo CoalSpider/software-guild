@@ -11,12 +11,12 @@
 <html>
     <head>
         <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">  
-        <link href="${pageContext.request.contextPath}/css/debugStyles.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/css/mainStyles.css" rel="stylesheet">
         <title>JSP Page</title>
     </head>
     <body>
         <div class="container">
-            <h1>Spring MVC Application from Archetype</h1>
+            <h2>Hero Sightings</h2>
             <hr/>
             <div class="navbar">
                 <ul class="nav nav-tabs">
@@ -39,21 +39,27 @@
                 <div class="col-sm-3">
                     <h4>Powers</h4>
                     <c:forEach var="power" items="${hero.powers}">
-                        <!--link to the power page-->
-                        <a href="${pageContext.request.contextPath}/superpower${power.id}"><c:out value="${power.name}"/></a>
+                        <ul>
+                            <a href="${pageContext.request.contextPath}/superpower${power.id}"><c:out value="${power.name}"/></a>
+                        </ul>
                     </c:forEach>
                 </div>
                 <div class="col-sm-3">
                     <h4>Organizations</h4>
                     <c:forEach var="org" items="${hero.organizations}">
-                        <!--link to the org pag-->
-                        <a href="${pageContext.request.contextPath}/orgganization"${org.id}><c:out value="${org.name}}"/></a>
+                        <ul>
+                            <a href="${pageContext.request.contextPath}/organization"${org.id}><c:out value="${org.name}"/></a>
+                        </ul>
                     </c:forEach>
                 </div>
             </div>
             <div class="row">
-                <a href="${pageContext.request.contextPath}/editHero${hero.id}">Edit Hero</a>
-                <a href="${pageContext.request.contextPath}/deleteHero${hero.id}">Delete Hero</a>
+                <form method="GET" action="${pageContext.request.contextPath}/editHero${hero.id}">
+                    <button type="submit">Edit Hero</button>
+                </form>
+                <form method="GET" action="${pageContext.request.contextPath}/deleteHero${hero.id}">
+                    <button type="submit">Delete Hero</button>
+                </form>
             </div>
         </div>
 

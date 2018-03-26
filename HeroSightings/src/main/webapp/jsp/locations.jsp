@@ -13,15 +13,15 @@
         <title>Index Page</title>
         <!-- Bootstrap core CSS -->
         <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">   
-        <link href="${pageContext.request.contextPath}/css/debugStyles.css" rel="stylesheet">     
+        <link href="${pageContext.request.contextPath}/css/mainStyles.css" rel="stylesheet">     
     </head>
     <body>
         <div class="container">
-            <h1>Spring MVC Application from Archetype</h1>
+            <h2>Hero Sightings</h2>
             <hr/>
             <div class="navbar">
                 <ul class="nav nav-tabs">
-                    <li role="presentation"><a href="${pageContext.request.contextPath}/index">Home</a></li>
+                    <li role="presentation"><a href="${pageContext.request.contextPath}/">Home</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/heros">Heros</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/sightings">Sightings</a></li>
                     <li role="presentation"><a href="${pageContext.request.contextPath}/organizations">Organizations</a></li>
@@ -29,14 +29,14 @@
                     <li role="presentation" class="active"><a href="${pageContext.request.contextPath}/locations">Locations</a></li>
                 </ul>    
             </div>
-            <div>
+            <div class="borderDiv">
                 <c:forEach var="location" items="${locations}">
-                    <a href="${pageContext.request.contextPath}/location${location.id}"><c:out value="${location.id}:${location.name}"/></a>
+                    <a href="${pageContext.request.contextPath}/location${location.id}"><c:out value="${location.name}"/></a>
                 </c:forEach>
             </div>
             <div>
                 <form method="GET" action="${pageContext.request.contextPath}/createLocation">
-                    <button type="submit">Create Location</button>
+                    <button class="createButton" type="submit">Create Location</button>
                 </form>
             </div>
         </div>

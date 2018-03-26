@@ -12,13 +12,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">  
-        <link href="${pageContext.request.contextPath}/css/debugStyles.css" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">   
+        <link href="${pageContext.request.contextPath}/css/mainStyles.css" rel="stylesheet">
         <title>JSP Page</title>
     </head>
     <body>
         <div class="container">
-            <h1>Spring MVC Application from Archetype</h1>
+            <h2>Hero Sightings</h2>
             <hr/>
             <div class="navbar">
                 <ul class="nav nav-tabs">

@@ -12,13 +12,14 @@
     <head>
         <title>Index Page</title>
         <!-- Bootstrap core CSS -->
-        <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">   
-        <link href="${pageContext.request.contextPath}/css/debugStyles.css" rel="stylesheet">     
+        <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">    
+        <link href="${pageContext.request.contextPath}/css/mainStyles.css" rel="stylesheet">
 
         <%@ include file="header.jsp" %>
     </head>
     <body>
         <div class="container">
+            <h2>Hero Sightings</h2>
             <form method="POST" action="${pageContext.request.contextPath}/saveNewSuperpower">
                 <div class="row">
                     <div class="col-sm-5">
