@@ -6,18 +6,32 @@
 package com.sg.herosightings.model;
 
 import java.util.Objects;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Email;
 
 /**
  *
  * @author Ben Norman
  */
 public class Organization implements TableObject{
-
     private int id;
+    @NotNull
+    @Size(min=1,max=100)
     private String name;
+    @NotNull
+    @Size(min=1,max=500)
     private String description;
+    @NotNull
+    @Size(min=1,max=100)
     private String address;
+    @NotNull
+    @Size(min=1,max=100)
+    @Email
     private String email;
+    @NotNull
+    @Size(min=1,max=30)
     private String phoneNumber;
 
     public Organization() {

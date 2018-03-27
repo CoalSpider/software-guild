@@ -7,18 +7,30 @@ package com.sg.herosightings.model;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Range;
 
 /**
  *
  * @author Ben Norman
  */
 public class Location{
-
     private int id;
+    @NotNull
+    @Size(min=1,max=50, message="name should be between 1 - 50 characters")
     private String name;
+    @NotNull
+    @Size(min=1,max=500, message="description should be between 1 - 500 characters")
     private String description;
+    @NotNull
+    @Size(min=1,max=100, message="address should be between 1 - 100 characters")
     private String address;
+    @NotNull
+    @Range(min=-90,max=90, message="latitude must be between -90 and 90 degrees")
     private BigDecimal latitude;
+    @NotNull
+    @Range(min=-180,max=180, message="longitude must be between -180 and 180 degrees")
     private BigDecimal longitude;
 
     public Location() {

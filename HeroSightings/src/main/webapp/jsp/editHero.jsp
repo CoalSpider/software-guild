@@ -6,6 +6,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,27 +19,33 @@
     <body>
         <div class="container">
             <h2>Hero Sightings</h2>
-            <form method="POST" action="${pageContext.request.contextPath}/saveChangesHero">
+            <sf:form method="POST" action="${pageContext.request.contextPath}/saveChangesHero" modelAttribute="hero">
                 <div class="row">
                     <div class="col-sm-3">
                         <h4>Image of Hero</h4>
                     </div>
                     <div class="col-sm-3">
-                        <input name="id" type="hidden" value="${hero.id}">
+                        <!--id-->
+                        <sf:input path="id" name="id" type="hidden" value="${hero.id}"/>
+                        <!--name-->
                         <label for="name" value="name">Name</label>
+                        <sf:input path="name" name="name" id="name" placeholder="enter name" type="text" value="${hero.name}"/> 
+                        <sf:errors path="name" cssclass="error"></sf:errors>
+                        <!--description-->
                         <label for="desc" value="description">Description</label>
-                        <input name="name" id="name" type="text" value="${hero.name}"/> 
-                        <textarea name="description" id="desc" value="${hero.description}" rows="4" cols="35"><c:out value="${hero.description}"/></textarea>
-
+                        <sf:textarea path="description" placeholder="enter hero description" name="description" id="desc" value="${hero.description}" rows="4" cols="35"></sf:textarea>
+                        <sf:errors path="description" cssclass="error"></sf:errors>
                     </div>
                     <div class="col-sm-3">
                         <h4>Powers</h4>
+                        <!--checked boxes -->
                         <c:forEach var="power" items="${hero.powers}">
                             <ul>
                                 <input name="powersArray" type="checkbox" checked value="${power.id}"/>
                                 <c:out value="${power.name}"/>
                             </ul>
                         </c:forEach>
+                        <!--unchecked boxes-->
                         <c:forEach var="power" items="${powers}">
                             <ul>
                                 <input name="powersArray" type="checkbox"value="${power.id}"/>
@@ -63,9 +70,9 @@
                     </div>
                 </div>
                 <div class="row">
-                    <button type="submit">Save Changes</button>
+                    <sf:button type="submit">Save Changes</sf:button>
                 </div>
-            </form>
+            </sf:form>
         </div>
 
         <!-- Placed at the end of the document so the pages load faster -->

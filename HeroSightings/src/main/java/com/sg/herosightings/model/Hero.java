@@ -5,20 +5,30 @@
  */
 package com.sg.herosightings.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author Ben Norman
  */
 public class Hero implements TableObject{
-
     private int id;
+    @NotNull
+    @Size(min=1,max=60, message="name should be between 1 - 60 characters")
     private String name;
+    @NotNull
+    @Size(min=1,max=500, message="description should be between 1 - 500 characters")
     private String description;
-    private List<Superpower> powers;
-    private List<Organization> organizations;
+    @Valid
+    private List<Superpower> powers = new ArrayList<>();
+    @Valid
+    private List<Organization> organizations = new ArrayList<>();
 
     public Hero() {
         // default

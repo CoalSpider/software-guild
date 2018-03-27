@@ -6,19 +6,26 @@
 package com.sg.herosightings.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  *
  * @author Ben Norman
  */
 public class Sighting implements TableObject{
-
     private int id;
+    @NotNull
+    @Valid
     private Location location;
+    @NotNull
     private LocalDateTime dateAndTime;
-    private List<Hero> heros;
+    @Valid
+    private List<Hero> heros = new ArrayList<>();
 
     public Sighting() {
         // default
