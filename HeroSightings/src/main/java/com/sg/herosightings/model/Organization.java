@@ -6,32 +6,30 @@
 package com.sg.herosightings.model;
 
 import java.util.Objects;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.Email;
 
 /**
  *
  * @author Ben Norman
  */
-public class Organization implements TableObject{
+public class Organization implements TableObject {
+
     private int id;
     @NotNull
-    @Size(min=1,max=100)
+    @Size(min = 1, max = 100, message = "name should be between 1 - 100 characters")
     private String name;
     @NotNull
-    @Size(min=1,max=500)
+    @Size(min = 1, max = 500, message = "description should be between 1 - 500 characters")
     private String description;
     @NotNull
-    @Size(min=1,max=100)
+    @Size(min = 1, max = 100, message = "address should be between 1 - 100 characters")
     private String address;
     @NotNull
-    @Size(min=1,max=100)
-    @Email
+    @Size(min = 1, max = 100, message = "email should be between 1 - 100 characters")
     private String email;
     @NotNull
-    @Size(min=1,max=30)
+    @Size(min = 1, max = 30, message = "phoneNumber should be between 1 - 30 characters")
     private String phoneNumber;
 
     public Organization() {

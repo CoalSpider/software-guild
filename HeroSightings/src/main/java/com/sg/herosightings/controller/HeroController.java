@@ -237,7 +237,8 @@ public class HeroController {
     }
 
     @GetMapping("/createSuperpower")
-    public String createSuperpower() {
+    public String createSuperpower(Model model) {
+        model.addAttribute("superpower", new Superpower());
         return "createSuperpower";
     }
 
@@ -255,13 +256,21 @@ public class HeroController {
     }
 
     @PostMapping("/saveChangesSuperpower")
-    public String saveSuperpower(@Valid Superpower power) {
+    public String saveSuperpower(@Valid Superpower power, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()){
+            model.addAttribute("superpower", power);
+            return "editSuperpower";
+        }
         power = service.updateSuperpower(power.getId(), power);
         return "redirect:/superpower" + power.getId();
     }
 
     @PostMapping("/saveNewSuperpower")
-    public String saveNewSuperpower(@Valid Superpower power) {
+    public String saveNewSuperpower(@Valid Superpower power, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()){
+            model.addAttribute("superpower", power);
+            return "createSuperpower";
+        }
         power = service.createSuperpower(power);
         return "redirect:/superpower" + power.getId();
     }
@@ -284,7 +293,8 @@ public class HeroController {
     }
 
     @GetMapping("/createOrganization")
-    public String createOrganization() {
+    public String createOrganization(Model model) {
+        model.addAttribute("organization", new Organization());
         return "createOrganization";
     }
 
@@ -302,15 +312,23 @@ public class HeroController {
     }
 
     @PostMapping("/saveChangesOrganization")
-    public String saveOrganization(@Valid Organization organization) {
+    public String saveOrganization(@Valid Organization organization, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()){
+            model.addAttribute("organization", organization);
+            return "editOrganization";
+        }
         organization = service.updateOrganization(organization.getId(), organization);
         return "redirect:/organization" + organization.getId();
     }
 
     @PostMapping("/saveNewOrganization")
-    public String saveNewOrganization(@Valid Organization power) {
-        power = service.createOrganization(power);
-        return "redirect:/organization" + power.getId();
+    public String saveNewOrganization(@Valid Organization organization, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()){
+            model.addAttribute("organization", organization);
+            return "createOrganization";
+        }
+        organization = service.createOrganization(organization);
+        return "redirect:/organization" + organization.getId();
     }
 
     //=======================================================

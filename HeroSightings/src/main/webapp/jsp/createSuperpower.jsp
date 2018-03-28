@@ -6,6 +6,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -20,7 +21,7 @@
     <body>
         <div class="container">
             <h2>Hero Sightings</h2>
-            <form method="POST" action="${pageContext.request.contextPath}/saveNewSuperpower">
+            <sf:form method="POST" action="${pageContext.request.contextPath}/saveNewSuperpower" modelAttribute="superpower">
                 <div class="row">
                     <div class="col-sm-5">
                         <h4>IMAGE OF SUPERPOWER</h4>
@@ -29,16 +30,18 @@
                         <h4>Superpower</h4>
                         <!--name-->
                         <label for="name" value="name">Name</label>
-                        <input name="name" id="name" type="text" value=""/> 
+                        <sf:input path="name" placeholder="enter name" name="name" id="name" type="text" value="${superpower.name}"/> 
+                        <sf:errors path="name" cssclass="error"></sf:errors>
                         <!--description-->
                         <label for="desc" value="description">Description</label>
-                        <textarea name="description" id="desc" value="" rows="4" cols="35"></textarea>
+                        <sf:textarea path="description" placeholder="enter description" name="description" id="desc" rows="4" cols="35" value="${superpower.description}"></sf:textarea>
+                        <sf:errors path="description" cssclass="error"></sf:errors>
                     </div>
                 </div>
                 <div class="row">
-                    <button type="submit">Create Superpower</button>
+                    <sf:button type="submit">Create Superpower</sf:button>
                 </div>
-            </form>
+            </sf:form>
         </div>
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="${pageContext.request.contextPath}/js/jquery-3.1.1.min.js"></script>

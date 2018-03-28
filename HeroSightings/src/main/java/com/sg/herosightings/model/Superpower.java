@@ -6,7 +6,6 @@
 package com.sg.herosightings.model;
 
 import java.util.Objects;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -17,10 +16,10 @@ import javax.validation.constraints.Size;
 public class Superpower implements TableObject{
     private int id;
     @NotNull
-    @Size(min=1,max=50)
+    @Size(min=1,max=50, message="name should be between 1 - 50 characters")
     private String name;
     @NotNull
-    @Size(min=1,max=500)
+    @Size(min=1,max=500, message="name should be between 1 - 500 characters")
     private String description;
     
     public Superpower(){
