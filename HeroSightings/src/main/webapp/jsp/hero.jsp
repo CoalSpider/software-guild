@@ -54,12 +54,8 @@
                 </div>
             </div>
             <div class="row">
-                <form method="GET" action="${pageContext.request.contextPath}/editHero${hero.id}">
-                    <button type="submit">Edit Hero</button>
-                </form>
-                <form method="GET" action="${pageContext.request.contextPath}/deleteHero${hero.id}">
-                    <button type="submit">Delete Hero</button>
-                </form>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/editHero${hero.id}">Edit Hero</a>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/deleteHero${hero.id}" onclick="return confirm('delete hero?')">Delete Hero</a>
             </div>
         </div>
 

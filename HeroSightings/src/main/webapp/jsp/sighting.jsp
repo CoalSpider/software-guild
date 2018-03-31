@@ -45,8 +45,8 @@
                 </div>
             </div>
             <div class="row">
-                <a href="${pageContext.request.contextPath}/editSighting${sighting.id}">Edit Sighting</a>
-                <a href="${pageContext.request.contextPath}/deleteSighting${sighting.id}">Delete Sighting</a>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/editSighting${hero.id}">Edit Sighting</a>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/deleteSighting${hero.id}" onclick="return confirm('delete sighting?')">Delete Sighting</a>
             </div>
         </div>
 

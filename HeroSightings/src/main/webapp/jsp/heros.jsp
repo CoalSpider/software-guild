@@ -34,9 +34,7 @@
                 </c:forEach>
             </div>
             <div>
-                <form method="GET" action="${pageContext.request.contextPath}/createHero">
-                    <button class="createButton">Create Hero</button>
-                </form>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/createHero">Create Hero</a>
             </div>
 
             <!-- Placed at the end of the document so the pages load faster -->

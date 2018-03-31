@@ -35,9 +35,7 @@
                 </c:forEach>
             </div>
             <div>
-                <form method="GET" action="${pageContext.request.contextPath}/createSighting">
-                    <button class="createButton">Create Sighting</button>
-                </form>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/createSighting">Create Sighting</a>
             </div>
 
             <!-- Placed at the end of the document so the pages load faster -->

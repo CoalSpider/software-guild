@@ -47,8 +47,8 @@
                 </div>
             </div>
             <div class="row">
-                <a href="${pageContext.request.contextPath}/editLocation${location.id}">Edit Location</a>
-                <a href="${pageContext.request.contextPath}/deleteLocation${location.id}">Delete Location</a>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/editLocation${location.id}">Edit Location</a>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/deleteLocation${location.id}" onclick="return confirm('delete location?')">Delete Location</a>
             </div>
         </div>
 

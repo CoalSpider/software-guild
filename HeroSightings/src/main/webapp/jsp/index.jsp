@@ -50,6 +50,7 @@
                     <h3>Google Map</h3>
                     <div id="map-canvas" style="height:500px; width:500px">
                         <script>
+                            // TODO: remove this code from production version
                             // code from https://stackoverflow.com/questions/38148097/google-maps-api-without-key/38809129#38809129
                             // hack Google Maps to bypass API v3 key (needed since 22 June 2016 http://googlegeodevelopers.blogspot.com.es/2016/06/building-for-scale-updates-to-google.html)
                             var target = document.head;

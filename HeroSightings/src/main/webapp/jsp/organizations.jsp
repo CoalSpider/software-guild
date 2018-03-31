@@ -34,9 +34,7 @@
                 </c:forEach>
             </div>
             <div>
-                <form method="GET" action="${pageContext.request.contextPath}/createOrganization">
-                    <button class="createButton" type="submit">Create Organization</button>
-                </form>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/createOrganization">Create Organization</a>
             </div>
             <!-- Placed at the end of the document so the pages load faster -->
             <script src="${pageContext.request.contextPath}/js/jquery-3.1.1.min.js"></script>
