@@ -47,8 +47,8 @@
                 </div>
             </div>
             <div class="row">
-                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/editOrganization${hero.id}">Edit Organization</a>
-                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/deleteOrganization${hero.id}" onclick="return confirm('delete organization?')">Delete Organization</a>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/editOrganization${organization.id}">Edit Organization</a>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/deleteOrganization${organization.id}" onclick="return confirm('delete organization?')">Delete Organization</a>
             </div>
         </div>
 

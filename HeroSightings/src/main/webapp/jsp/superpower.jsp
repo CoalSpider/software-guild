@@ -38,8 +38,8 @@
                 </div>
             </div>
             <div class="row">
-                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/editSuperpower${hero.id}">Edit Superpower</a>
-                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/deleteSuperpower${hero.id}" onclick="return confirm('delete superpower?')">Delete Superpower</a>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/editSuperpower${superpower.id}">Edit Superpower</a>
+                <a class="btn btn-default createButton" href="${pageContext.request.contextPath}/deleteSuperpower${superpower.id}" onclick="return confirm('delete superpower?')">Delete Superpower</a>
             </div>
         </div>
 
