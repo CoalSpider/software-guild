@@ -30,7 +30,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class HeroDaoDBImplTest {
 
-    HeroDao dao;
+    private HeroDao dao;
 
     public HeroDaoDBImplTest() {
     }

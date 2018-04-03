@@ -5,12 +5,12 @@
  */
 package com.sg.herosightings.controller;
 
+import com.sg.herosightings.dao.HeroDao;
 import com.sg.herosightings.model.Hero;
 import com.sg.herosightings.model.Location;
 import com.sg.herosightings.model.Organization;
 import com.sg.herosightings.model.Sighting;
 import com.sg.herosightings.model.Superpower;
-import com.sg.herosightings.service.HeroService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class HeroController {
 
     @Inject
-    HeroService service;
+    private HeroDao dao;
 
     private Sighting createTestSighting() {
         Location location = new Location();
@@ -47,18 +47,18 @@ public class HeroController {
         location.setAddress("test address");
         location.setLatitude(new BigDecimal("-10.00001"));
         location.setLongitude(new BigDecimal("-10.00001"));
-        location = service.createLocation(location);
+        location = dao.createLocation(location);
 
         List<Superpower> powers = new ArrayList<>();
         Superpower power = new Superpower();
         power.setName("TestPowerA");
         power.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
-        power = service.createSuperpower(power);
+        power = dao.createSuperpower(power);
         powers.add(power);
         Superpower power2 = new Superpower();
         power2.setName("TestPowerB");
         power2.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
-        power2 = service.createSuperpower(power2);
+        power2 = dao.createSuperpower(power2);
         powers.add(power2);
 
         List<Organization> orgs = new ArrayList<>();
@@ -68,7 +68,7 @@ public class HeroController {
         org.setAddress("this is test address for a organization");
         org.setPhoneNumber("123-456-7890");
         org.setEmail("testorganizationematil@gmail.com");
-        org = service.createOrganization(org);
+        org = dao.createOrganization(org);
         orgs.add(org);
         Organization org2 = new Organization();
         org2.setName("TestOrganizationB");
@@ -76,7 +76,7 @@ public class HeroController {
         org2.setAddress("this is test address for a organization");
         org2.setPhoneNumber("123-456-7890");
         org2.setEmail("testorganizationematil@gmail.com");
-        org2 = service.createOrganization(org2);
+        org2 = dao.createOrganization(org2);
         orgs.add(org2);
 
         Hero hero = new Hero();
@@ -84,7 +84,7 @@ public class HeroController {
         hero.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
         hero.setOrganizations(orgs);
         hero.setPowers(powers);
-        hero = service.createHero(hero);
+        hero = dao.createHero(hero);
         List<Hero> heros = new ArrayList<>();
         heros.add(hero);
 
@@ -99,9 +99,9 @@ public class HeroController {
 
     @GetMapping("/")
     public String landingPage(Model model) {
-        List<Sighting> recentSightings = service.getMostRecentSightings(10);
+        List<Sighting> recentSightings = dao.getMostRecentSightings(10);
         if (recentSightings.isEmpty()) {
-            recentSightings.add(service.createSighting(createTestSighting()));
+            recentSightings.add(dao.createSighting(createTestSighting()));
         }
         model.addAttribute("recentSightings", recentSightings);
         return "index";
@@ -112,21 +112,21 @@ public class HeroController {
     //=======================================================
     @GetMapping("/heros")
     public String displayHeros(Model model) {
-        List<Hero> heros = service.getAllHeros();
+        List<Hero> heros = dao.getAllHeros();
         model.addAttribute("heros", heros);
         return "heros";
     }
 
     @GetMapping("/hero{id}")
     public String showHero(@PathVariable("id") Integer id, Model model) {
-        Hero h = service.getHeroById(id);
+        Hero h = dao.getHeroById(id);
         model.addAttribute("hero", h);
         return "hero";
     }
 
     @GetMapping("/editHero{id}")
     public String editHero(@PathVariable("id") Integer id, Model model) {
-        Hero h = service.getHeroById(id);
+        Hero h = dao.getHeroById(id);
         setHeroModel(h, model);
         return "editHero";
     }
@@ -144,8 +144,8 @@ public class HeroController {
      */
     private Model setHeroModel(@Valid Hero hero, Model model) {
         model.addAttribute("hero", hero);
-        model.addAttribute("powers", filterList(service.getAllSuperpowers(), hero.getPowers()));
-        model.addAttribute("organizations", filterList(service.getAllOrganizations(), hero.getOrganizations()));
+        model.addAttribute("powers", filterList(dao.getAllSuperpowers(), hero.getPowers()));
+        model.addAttribute("organizations", filterList(dao.getAllOrganizations(), hero.getOrganizations()));
         return model;
     }
 
@@ -164,19 +164,19 @@ public class HeroController {
 
     @GetMapping("/deleteHero{id}")
     public String deleteHero(@PathVariable("id") Integer id) {
-        service.deleteHero(id);
+        dao.deleteHero(id);
         return "redirect:/heros";
     }
     
     private Hero setHeroArrays(Hero hero, List<Integer> powersArray, List<Integer> organizationArray){
         // extract powers
         List<Superpower> powers = new ArrayList<>();
-        powersArray.forEach(i -> powers.add(service.getSuperpowerById(i)));
+        powersArray.forEach(i -> powers.add(dao.getSuperpowerById(i)));
         hero.setPowers(powers);
 
         // extract orgs
         List<Organization> orgs = new ArrayList<>();
-        organizationArray.forEach(i -> orgs.add(service.getOrganizationById(i)));
+        organizationArray.forEach(i -> orgs.add(dao.getOrganizationById(i)));
         hero.setOrganizations(orgs);
         return hero;
     }
@@ -194,7 +194,7 @@ public class HeroController {
             return "editHero";
         }
         //update hero
-        hero = service.updateHero(hero.getId(), hero);
+        hero = dao.updateHero(hero.getId(), hero);
 
         return "redirect:/hero" + hero.getId();
     }
@@ -214,7 +214,7 @@ public class HeroController {
             return "createHero";
         }
         // create hero
-        hero = service.createHero(hero);
+        hero = dao.createHero(hero);
 
         return "redirect:/hero" + hero.getId();
     }
@@ -224,14 +224,14 @@ public class HeroController {
     //=======================================================
     @GetMapping("/superpowers")
     public String displaySuperpowers(Model model) {
-        List<Superpower> powers = service.getAllSuperpowers();
+        List<Superpower> powers = dao.getAllSuperpowers();
         model.addAttribute("superpowers", powers);
         return "superpowers";
     }
 
     @GetMapping("/superpower{id}")
     public String showSuperpower(@PathVariable("id") Integer id, Model model) {
-        Superpower s = service.getSuperpowerById(id);
+        Superpower s = dao.getSuperpowerById(id);
         model.addAttribute("superpower", s);
         return "superpower";
     }
@@ -244,13 +244,13 @@ public class HeroController {
 
     @GetMapping("/deleteSuperpower{id}")
     public String deleteSuperpower(@PathVariable("id") Integer id) {
-        service.deleteSuperpower(id);
+        dao.deleteSuperpower(id);
         return "redirect:/superpowers";
     }
 
     @GetMapping("/editSuperpower{id}")
     public String editSuperpower(@PathVariable("id") Integer id, Model model) {
-        Superpower s = service.getSuperpowerById(id);
+        Superpower s = dao.getSuperpowerById(id);
         model.addAttribute("superpower", s);
         return "editSuperpower";
     }
@@ -261,7 +261,7 @@ public class HeroController {
             model.addAttribute("superpower", power);
             return "editSuperpower";
         }
-        power = service.updateSuperpower(power.getId(), power);
+        power = dao.updateSuperpower(power.getId(), power);
         return "redirect:/superpower" + power.getId();
     }
 
@@ -271,7 +271,7 @@ public class HeroController {
             model.addAttribute("superpower", power);
             return "createSuperpower";
         }
-        power = service.createSuperpower(power);
+        power = dao.createSuperpower(power);
         return "redirect:/superpower" + power.getId();
     }
 
@@ -280,14 +280,14 @@ public class HeroController {
     //=======================================================
     @GetMapping("/organizations")
     public String displayOrganizations(Model model) {
-        List<Organization> powers = service.getAllOrganizations();
+        List<Organization> powers = dao.getAllOrganizations();
         model.addAttribute("organizations", powers);
         return "organizations";
     }
 
     @GetMapping("/organization{id}")
     public String showOrganization(@PathVariable("id") Integer id, Model model) {
-        Organization s = service.getOrganizationById(id);
+        Organization s = dao.getOrganizationById(id);
         model.addAttribute("organization", s);
         return "organization";
     }
@@ -300,13 +300,13 @@ public class HeroController {
 
     @GetMapping("/deleteOrganization{id}")
     public String deleteOrganization(@PathVariable("id") Integer id) {
-        service.deleteOrganization(id);
+        dao.deleteOrganization(id);
         return "redirect:/organizations";
     }
 
     @GetMapping("/editOrganization{id}")
     public String editOrganization(@PathVariable("id") Integer id, Model model) {
-        Organization s = service.getOrganizationById(id);
+        Organization s = dao.getOrganizationById(id);
         model.addAttribute("organization", s);
         return "editOrganization";
     }
@@ -317,7 +317,7 @@ public class HeroController {
             model.addAttribute("organization", organization);
             return "editOrganization";
         }
-        organization = service.updateOrganization(organization.getId(), organization);
+        organization = dao.updateOrganization(organization.getId(), organization);
         return "redirect:/organization" + organization.getId();
     }
 
@@ -327,7 +327,7 @@ public class HeroController {
             model.addAttribute("organization", organization);
             return "createOrganization";
         }
-        organization = service.createOrganization(organization);
+        organization = dao.createOrganization(organization);
         return "redirect:/organization" + organization.getId();
     }
 
@@ -336,22 +336,22 @@ public class HeroController {
     //=======================================================
     @GetMapping("/sightings")
     public String displaySightings(Model model) {
-        List<Sighting> powers = service.getAllSightings();
+        List<Sighting> powers = dao.getAllSightings();
         model.addAttribute("sightings", powers);
         return "sightings";
     }
 
     @GetMapping("/sighting{id}")
     public String showSighting(@PathVariable("id") Integer id, Model model) {
-        Sighting s = service.getSightingById(id);
+        Sighting s = dao.getSightingById(id);
         model.addAttribute("sighting", s);
         return "sighting";
     }
 
     @GetMapping("/createSighting")
     public String createSighting(Model model) {
-        model.addAttribute("locations", service.getAllLocations());
-        model.addAttribute("heros", service.getAllHeros());
+        model.addAttribute("locations", dao.getAllLocations());
+        model.addAttribute("heros", dao.getAllHeros());
         model.addAttribute("date", LocalDate.now());
         model.addAttribute("time", LocalTime.now());
         return "createSighting";
@@ -359,16 +359,16 @@ public class HeroController {
 
     @GetMapping("/deleteSighting{id}")
     public String deleteSighting(@PathVariable("id") Integer id) {
-        service.deleteSighting(id);
+        dao.deleteSighting(id);
         return "redirect:/sightings";
     }
 
     @GetMapping("/editSighting{id}")
     public String editSighting(@PathVariable("id") Integer id, Model model) {
-        Sighting s = service.getSightingById(id);
+        Sighting s = dao.getSightingById(id);
         model.addAttribute("sighting", s);
         // get all heros not already part of sighting
-        List<Hero> heros = service
+        List<Hero> heros = dao
                 .getAllHeros()
                 .stream()
                 .filter(hero -> s.getHeros().contains(hero) == false)
@@ -389,14 +389,14 @@ public class HeroController {
             @RequestParam(value = "time") @DateTimeFormat(iso = ISO.TIME) LocalTime time) {
         // create heros
         List<Hero> heros = new ArrayList<>();
-        herosArray.forEach(i -> heros.add(service.getHeroById(i)));
+        herosArray.forEach(i -> heros.add(dao.getHeroById(i)));
         // create sighting
         Sighting s = new Sighting();
-        s.setLocation(service.getLocationById(locationId));
+        s.setLocation(dao.getLocationById(locationId));
         s.setHeros(heros);
         s.setDateAndTime(LocalDateTime.of(date, time));
         // update
-        s = service.updateSighting(id, s);
+        s = dao.updateSighting(id, s);
         return "redirect:/sighting" + s.getId();
     }
 
@@ -408,14 +408,14 @@ public class HeroController {
             @RequestParam(value = "time") @DateTimeFormat(iso = ISO.TIME) LocalTime time) {
         // create heros
         List<Hero> heros = new ArrayList<>();
-        herosArray.forEach(i -> heros.add(service.getHeroById(i)));
+        herosArray.forEach(i -> heros.add(dao.getHeroById(i)));
         // create sighting
         Sighting s = new Sighting();
-        s.setLocation(service.getLocationById(locationId));
+        s.setLocation(dao.getLocationById(locationId));
         s.setHeros(heros);
         s.setDateAndTime(LocalDateTime.of(date, time));
         // create sighting
-        s = service.createSighting(s);
+        s = dao.createSighting(s);
         return "redirect:/sighting" + s.getId();
     }
 
@@ -424,14 +424,14 @@ public class HeroController {
     //=======================================================
     @GetMapping("/locations")
     public String displayLocations(Model model) {
-        List<Location> powers = service.getAllLocations();
+        List<Location> powers = dao.getAllLocations();
         model.addAttribute("locations", powers);
         return "locations";
     }
 
     @GetMapping("/location{id}")
     public String showLocation(@PathVariable("id") Integer id, Model model) {
-        Location s = service.getLocationById(id);
+        Location s = dao.getLocationById(id);
         model.addAttribute("location", s);
         return "location";
     }
@@ -444,13 +444,13 @@ public class HeroController {
 
     @GetMapping("/deleteLocation{id}")
     public String deleteLocation(@PathVariable("id") Integer id) {
-        service.deleteLocation(id);
+        dao.deleteLocation(id);
         return "redirect:/locations";
     }
 
     @GetMapping("/editLocation{id}")
     public String editLocation(@PathVariable("id") Integer id, Model model) {
-        Location s = service.getLocationById(id);
+        Location s = dao.getLocationById(id);
         model.addAttribute("location", s);
         return "editLocation";
     }
@@ -461,7 +461,7 @@ public class HeroController {
             model.addAttribute("location", location);
             return "editLocation";
         }
-        location = service.updateLocation(location.getId(), location);
+        location = dao.updateLocation(location.getId(), location);
         return "redirect:/location" + location.getId();
     }
 
@@ -471,7 +471,7 @@ public class HeroController {
             model.addAttribute("location", location);
             return "createLocation";
         }
-        location = service.createLocation(location);
+        location = dao.createLocation(location);
         return "redirect:/location" + location.getId();
     }
 }
